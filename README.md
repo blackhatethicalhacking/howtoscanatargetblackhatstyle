@@ -1,6 +1,8 @@
 # howtoscanatargetblackhatstyle
 How to Scan A Target - Black Hat Style - Recon is the heart of Hacking
 
+Just Open the File, and Test the Commands on your OWN Servers for Educational Purposes.
+
 How to Scan A Target:
 blackhatethicalhacking.com
 This Black Hat MindSet And Technique is for educational purpose only.
