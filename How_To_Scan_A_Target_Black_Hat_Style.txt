@@ -2652,4 +2652,4 @@ Error in DNS resolvers
 
 DONE
 
-#blackhat #Anonymous #GLOBAL
+Education - Mindset - Black Hat "Ethical" Hacking.
